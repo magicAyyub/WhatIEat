@@ -14,13 +14,13 @@
 
 ## Stack
 
-| Layer     | Tech                                             |
-| --------- | ------------------------------------------------ |
-| Framework | Expo SDK 54 + Expo Router v6                     |
-| UI        | HeroUI Native (beta) + Uniwind (Tailwind for RN) |
-| State     | Zustand                                          |
-| Backend   | FastAPI (separate repo)                          |
-| Language  | TypeScript (strict)                              |
+| Layer     | Tech                                            |
+| --------- | ----------------------------------------------- |
+| Framework | Expo SDK 54 + Expo Router v6                    |
+| UI        | HeroUI Native 1.0.0 + Uniwind (Tailwind for RN) |
+| State     | Zustand                                         |
+| Backend   | FastAPI (separate repo)                         |
+| Language  | TypeScript (strict)                             |
 
 ---
 
@@ -83,4 +83,4 @@ const BASE_URL = "https://your-api-url.com";
 
 ## Dev shortcut
 
-The **HeroUI component showcase** is accessible from the Profile tab — tap the subtle "Dev: UI Showcase" link at the bottom. Only visible in development builds.
+The **HeroUI component showcase** is accessible from the Profile tab — tap the animated **"UI Showcase"** button at the bottom. Only visible in development builds.

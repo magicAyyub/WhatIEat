@@ -4,19 +4,19 @@ import { AppText } from "@/components/ui/app-text";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import {
-    ControlField,
-    Description,
-    Label,
-    Separator,
-    Surface,
-    Switch,
+  ControlField,
+  Description,
+  Label,
+  Separator,
+  Surface,
+  Switch,
 } from "heroui-native";
 import React from "react";
 import { View } from "react-native";
 import Animated, {
-    FadeInLeft,
-    FadeInRight,
-    ZoomIn,
+  FadeInLeft,
+  FadeInRight,
+  ZoomIn,
 } from "react-native-reanimated";
 import { withUniwind } from "uniwind";
 
@@ -179,7 +179,7 @@ const CustomStylesContent = () => {
         <Switch
           isSelected={contentIcon}
           onSelectedChange={setContentIcon}
-          className="w-[56px] h-[32px]"
+          className="w-14 h-8"
           animation={{
             backgroundColor: {
               value: ["#172554", "#eab308"],
@@ -187,7 +187,7 @@ const CustomStylesContent = () => {
           }}
         >
           <Switch.Thumb
-            className="size-[22px]"
+            className="size-5.5"
             animation={{
               left: {
                 value: 4,
@@ -226,7 +226,7 @@ const CustomStylesContent = () => {
         <Switch
           isSelected={contentText}
           onSelectedChange={setContentText}
-          className="w-[60px] h-[32px]"
+          className="w-15 h-8"
           animation={{
             backgroundColor: {
               value: ["#71717a", "#16a34a"],
@@ -234,7 +234,7 @@ const CustomStylesContent = () => {
           }}
         >
           <Switch.Thumb
-            className="size-[22px]"
+            className="size-5.5"
             animation={{
               left: {
                 value: 4,

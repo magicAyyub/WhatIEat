@@ -2,11 +2,11 @@ import { AppText } from "@/components/ui/app-text";
 import { simulatePress } from "@/helpers/utils/simulate-press";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
-    Button,
-    cn,
-    Popover,
-    useThemeColor,
-    type PopoverTriggerRef,
+  Button,
+  cn,
+  Popover,
+  useThemeColor,
+  type PopoverTriggerRef,
 } from "heroui-native";
 import { type FC, type RefObject } from "react";
 import { withUniwind } from "uniwind";
@@ -46,7 +46,7 @@ export const Ask: FC<Props> = ({ isOnboardingDone, triggerRef }) => {
       <Popover.Portal>
         <Popover.Content
           presentation="popover"
-          className={cn(className.popoverContent, "w-[240px]")}
+          className={cn(className.popoverContent, "w-60")}
           placement="top"
         >
           <Popover.Arrow

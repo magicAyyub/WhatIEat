@@ -13,7 +13,7 @@ You are the **living documentation** for the WhatIEat React Native app. Your job
 
 Fridge scan app: user photographs their fridge → FastAPI backend (separate repo) detects ingredients → app suggests recipes matched to the user's dietary profile and calorie goal.
 
-**Stack:** Expo SDK 54 · Expo Router v6 · HeroUI Native (beta) · Uniwind (Tailwind for RN) · Zustand · TypeScript strict · `@/` alias maps to `src/`
+**Stack:** Expo SDK 54 · Expo Router v6 · HeroUI Native 1.0.0 (stable) · Uniwind (Tailwind for RN) · Zustand · TypeScript strict · `@/` alias maps to `src/`
 
 ---
 
@@ -85,7 +85,16 @@ If something is a stub or placeholder (not yet implemented), say so clearly.
 - Styling → Uniwind `className` with semantic tokens: `bg-background`, `text-foreground`, `bg-surface`, `border-divider`, `text-primary` — no hardcoded colors
 - HTTP calls → only in `src/services/`, never `fetch()` directly in a screen
 - FormData uploads → follow `src/services/vision.ts`, never set `Content-Type` manually
-- HeroUI components → browse them live in the **Dev Showcase** (Profile tab → "Dev: UI Showcase", dev builds only)
+- HeroUI components → browse them live in the **Dev Showcase** (Profile tab → animated **"UI Showcase"** button, dev builds only)
+- HeroUI Native 1.0.0 key API notes:
+  - `feedbackVariant` (not `pressableFeedbackVariant`) on Button/PressableFeedback — values: `'scale-highlight' | 'scale-ripple' | 'scale' | 'none'`
+  - `Button.animation={{ highlight: {...} }}` for highlight config (not `pressableFeedbackHighlightProps`)
+  - `Accordion` uses `hideSeparator` (not `isDividerVisible`)
+  - `Surface` variants: `'default' | 'secondary' | 'tertiary' | 'transparent'` (no `'quaternary'`)
+  - `Tabs` variants: `'primary' | 'secondary'` (not `'pill'` or `'line'`)
+  - `Dialog.Close` / `Popover.Close` have no `asChild` prop — use controlled `isOpen`/`onOpenChange` state for custom close triggers
+  - `Popover.animation` and `Select.animation` only accept `"disable-all"` — custom timing configs are not supported
+  - `useSelect()` returns `SelectOption | SelectOption[]` — always guard with `!Array.isArray(value)` before accessing `.value`
 
 ---
 

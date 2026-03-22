@@ -6,13 +6,13 @@ An app that scans a fridge, detects ingredients, and suggests recipes based on t
 
 ## Stack
 
-| Layer     | Tech                                             |
-| --------- | ------------------------------------------------ |
-| Framework | Expo (SDK 54) + Expo Router v6                   |
-| UI        | HeroUI Native (beta) + Uniwind (Tailwind for RN) |
-| State     | Zustand                                          |
-| Backend   | FastAPI (external)                               |
-| Language  | TypeScript (strict)                              |
+| Layer     | Tech                                            |
+| --------- | ----------------------------------------------- |
+| Framework | Expo (SDK 54) + Expo Router v6                  |
+| UI        | HeroUI Native 1.0.0 + Uniwind (Tailwind for RN) |
+| State     | Zustand                                         |
+| Backend   | FastAPI (external)                              |
+| Language  | TypeScript (strict)                             |
 
 ---
 
@@ -95,5 +95,5 @@ recipes.tsx
 
 ## Dev shortcuts
 
-- **UI Showcase** (HeroUI components) — tap the subtle "Dev: UI Showcase" link at the bottom of the Profile tab. Only visible in dev builds.
+- **UI Showcase** (HeroUI components) — tap the animated **"UI Showcase"** button at the bottom of the Profile tab. Only visible in dev builds.
 - **Clear cache & restart** — `npx expo start --clear`
