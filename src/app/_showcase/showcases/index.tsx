@@ -1,0 +1,153 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { withUniwind } from "uniwind";
+import { Carousel } from "@/components/showcase/showcase-carousel";
+import type { ShowcaseItemData } from "@/components/showcase/showcases/showcase-item";
+
+const StyledIonicons = withUniwind(Ionicons);
+const data = [
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/super-app-paywall-light.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/super-app-paywall-dark.png",
+    title: "Super App Paywall",
+    description:
+      "Modern subscription paywall, featuring animated bottom sheet, tab navigation, and flexible plan options.",
+    href: "/_showcase/showcases/super-app-paywall",
+    components: [
+      { name: "BottomSheet", href: "/_showcase/components/bottom-sheet" },
+      { name: "Tabs", href: "/_showcase/components/tabs" },
+      { name: "FormField", href: "/_showcase/components/form-field" },
+      { name: "Button", href: "/_showcase/components/button" },
+      { name: "Chip", href: "/_showcase/components/chip" },
+    ],
+  },
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/raycast-showcase-light.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/raycast-showcase-dark.png",
+    title: "Raycast Model Select",
+    description:
+      "AI model selector with animated blur backdrop, progressive blurs, and smooth spring transitions inspired by Raycast.",
+    href: "/_showcase/showcases/raycast",
+    components: [
+      { name: "Select", href: "/_showcase/components/select" },
+      { name: "Button", href: "/_showcase/components/button" },
+      { name: "Avatar", href: "/_showcase/components/avatar" },
+    ],
+  },
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/cooking-onboarding-light-1.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/cooking-onboarding-dark-1.png",
+    title: "Cooking Onboarding",
+    description:
+      "Multi-step onboarding experience with automated popover sequences, state management, and interactive recipe features.",
+    href: "/_showcase/showcases/cooking-onboarding",
+    components: [
+      { name: "Popover", href: "/_showcase/components/popover" },
+      { name: "Avatar", href: "/_showcase/components/avatar" },
+      { name: "Button", href: "/_showcase/components/button" },
+      { name: "Divider", href: "/_showcase/components/divider" },
+    ],
+  },
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/linear-task-light.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/linear-task-dark.png",
+    title: "Linear Issue",
+    description:
+      "Interactive task management interface inspired by Linear, featuring dynamic dialogs and status updates.",
+    href: "/_showcase/showcases/linear-task",
+    components: [
+      { name: "Dialog", href: "/_showcase/components/dialog" },
+      { name: "Card", href: "/_showcase/components/card" },
+      { name: "Chip", href: "/_showcase/components/chip" },
+      { name: "RadioGroup", href: "/_showcase/components/radio-group" },
+      { name: "FormField", href: "/_showcase/components/form-field" },
+      { name: "Checkbox", href: "/_showcase/components/checkbox" },
+      { name: "Button", href: "/_showcase/components/button" },
+      { name: "Avatar", href: "/_showcase/components/avatar" },
+    ],
+  },
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/showcase-paywall.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/showcase-paywall.png",
+    title: "Hero Paywall",
+    description:
+      "Modern, animated paywall with free trial, secure checkout, and flexible plans.",
+    href: "/_showcase/showcases/paywall",
+    components: [
+      { name: "Switch", href: "/_showcase/components/switch" },
+      { name: "FormField", href: "/_showcase/components/form-field" },
+      { name: "RadioGroup", href: "/_showcase/components/radio-group" },
+      { name: "Button", href: "/_showcase/components/button" },
+    ],
+  },
+  {
+    imageLight:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/showcases-onboarding-light-1.png",
+    imageDark:
+      "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/images/heroui-native-example/showcases-onboarding-dark-1.png",
+    title: "Onboarding",
+    description: "Onboarding step with marquee carousel of shadowed cards.",
+    href: "/_showcase/showcases/onboarding",
+    components: [
+      { name: "Button", href: "/_showcase/components/button" },
+      { name: "Card", href: "/_showcase/components/card" },
+      { name: "Divider", href: "/_showcase/components/divider" },
+    ],
+  },
+] satisfies ShowcaseItemData[];
+
+export default function ScaleCarousel() {
+  const router = useRouter();
+
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View className="flex-1 bg-background">
+      {isLiquidGlassAvailable() ? (
+        <Pressable
+          className="absolute right-4 rounded-full z-50"
+          style={{
+            top: insets.top + 12,
+          }}
+          onPress={router.back}
+        >
+          <GlassView style={styles.glassView} isInteractive>
+            <StyledIonicons name="close" size={24} className="text-muted" />
+          </GlassView>
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={router.back}
+          className="absolute right-3 p-2.5 rounded-full bg-foreground/10 z-50"
+          style={{
+            top: insets.top + 12,
+          }}
+          hitSlop={12}
+        >
+          <StyledIonicons name="close" size={20} className="text-muted" />
+        </Pressable>
+      )}
+      <Carousel data={data} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  glassView: {
+    borderRadius: 99,
+    padding: 8,
+  },
+});
