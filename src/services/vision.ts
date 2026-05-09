@@ -1,10 +1,19 @@
+import { APP_CONFIG } from "@/config/runtime";
 import type { ScanResult } from "@/types/ingredient";
+import { BASE_URL } from "@/services/api";
+
+type ScanOptions = {
+  scoreThreshold?: number;
+};
 
 /**
  * Uploads a fridge photo to the backend and returns detected ingredients.
  * @param imageUri Local URI from expo-image-picker or expo-camera
  */
-export async function uploadFridgeImage(imageUri: string): Promise<ScanResult> {
+export async function uploadFridgeImage(
+  imageUri: string,
+  options: ScanOptions = {},
+): Promise<ScanResult> {
   const formData = new FormData();
 
   // React Native supports this shape for FormData file append
@@ -14,8 +23,14 @@ export async function uploadFridgeImage(imageUri: string): Promise<ScanResult> {
     type: "image/jpeg",
   } as unknown as Blob);
 
-  const BASE_URL = "http://192.168.1.100:8000"; // TODO: share constant with api.ts
-  const response = await fetch(`${BASE_URL}/vision/scan`, {
+  const params = new URLSearchParams();
+  const threshold = options.scoreThreshold ?? APP_CONFIG.vision.scoreThreshold;
+  params.set("score_threshold", String(threshold));
+  if (APP_CONFIG.vision.targetClass) {
+    params.set("target_class", APP_CONFIG.vision.targetClass);
+  }
+
+  const response = await fetch(`${BASE_URL}/vision/scan?${params.toString()}`, {
     method: "POST",
     body: formData,
     // Do NOT set Content-Type here — fetch sets it automatically with the boundary

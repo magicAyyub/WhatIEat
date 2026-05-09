@@ -1,0 +1,8 @@
+{
+  "apiBaseUrl": "http://172.20.10.10:8000",
+  "vision": {
+    "targetClass": null,
+    "scoreThreshold": 0.35,
+    "drawBoxesDefault": false
+  }
+}
