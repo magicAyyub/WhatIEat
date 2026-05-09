@@ -2,7 +2,7 @@
 
 > Scan your fridge, detect ingredients, and get personalized recipe suggestions based on your dietary profile and calorie goals.
 
----
+The vision backend repo is [here](https://github.com/magicAyyub/fridge_detector).
 
 ## What it does
 
