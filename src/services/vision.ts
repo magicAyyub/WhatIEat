@@ -4,6 +4,7 @@ import { BASE_URL } from "@/services/api";
 
 type ScanOptions = {
   scoreThreshold?: number;
+  includeMasks?: boolean;
 };
 
 /**
@@ -26,6 +27,8 @@ export async function uploadFridgeImage(
   const params = new URLSearchParams();
   const threshold = options.scoreThreshold ?? APP_CONFIG.vision.scoreThreshold;
   params.set("score_threshold", String(threshold));
+  const includeMasks = options.includeMasks ?? true;
+  params.set("include_masks", includeMasks ? "true" : "false");
   if (APP_CONFIG.vision.targetClass) {
     params.set("target_class", APP_CONFIG.vision.targetClass);
   }

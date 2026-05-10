@@ -3,6 +3,7 @@
   "vision": {
     "targetClass": null,
     "scoreThreshold": 0.35,
-    "drawBoxesDefault": false
+    "drawBoxesDefault": false,
+    "drawMasksDefault": true
   }
 }

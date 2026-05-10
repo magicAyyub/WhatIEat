@@ -75,7 +75,16 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the full breakdown: conventions, data
 
 The FastAPI backend lives in a separate repository. Update the base URL in `src/config/runtime-config.json` once you deploy it.
 
-example in development :
+In development :
+
+make a share c
+check your ip :
+
+```bash
+ipconfig getifaddr en0 || ipconfig getifaddr en1 || ifconfig | grep 'inet '
+```
+
+then use it. Exemple :
 
 ```json
 {

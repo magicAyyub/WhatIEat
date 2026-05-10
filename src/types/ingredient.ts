@@ -38,4 +38,9 @@ export type Detection = {
     x2: number;
     y2: number;
   };
+  mask?: {
+    polygon: [number, number][];
+    area: number;
+    source?: string;
+  };
 };

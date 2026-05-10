@@ -4,6 +4,7 @@ export type AppRuntimeConfig = {
     targetClass: string | null;
     scoreThreshold: number;
     drawBoxesDefault: boolean;
+    drawMasksDefault: boolean;
   };
 };
 

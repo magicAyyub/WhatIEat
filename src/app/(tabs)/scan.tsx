@@ -18,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Svg, { Polygon } from "react-native-svg";
 
 const MODEL_IMAGE_SIZE = 512;
 const PREVIEW_SIZE = 340;
@@ -36,6 +37,7 @@ export default function ScanScreen() {
   const [lastImageUri, setLastImageUri] = useState<string | null>(null);
   const [detections, setDetections] = useState<Detection[]>([]);
   const [showBoxes, setShowBoxes] = useState(APP_CONFIG.vision.drawBoxesDefault);
+  const [showMasks, setShowMasks] = useState(APP_CONFIG.vision.drawMasksDefault);
   const [scoreThreshold, setScoreThreshold] = useState(APP_CONFIG.vision.scoreThreshold);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -118,6 +120,15 @@ export default function ScanScreen() {
     };
   }
 
+  function scalePolygon(points: [number, number][]) {
+    const scale = PREVIEW_SIZE / MODEL_IMAGE_SIZE;
+    return points.map(([x, y]) => {
+      const sx = Math.max(0, Math.min(PREVIEW_SIZE, x * scale));
+      const sy = Math.max(0, Math.min(PREVIEW_SIZE, y * scale));
+      return `${sx},${sy}`;
+    }).join(" ");
+  }
+
   const settingsButton = (
     <Pressable
       className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
@@ -157,6 +168,16 @@ export default function ScanScreen() {
                 </View>
                 <AppText className="mt-1 text-xs text-zinc-500">
                   Default comes from runtime-config.json. This switch changes current session only.
+                </AppText>
+              </View>
+
+              <View className="mb-3 rounded-xl bg-zinc-100 px-3 py-3">
+                <View className="flex-row items-center justify-between">
+                  <AppText className="font-medium">Show segmentation masks</AppText>
+                  <Switch value={showMasks} onValueChange={setShowMasks} />
+                </View>
+                <AppText className="mt-1 text-xs text-zinc-500">
+                  Displays SAM masks when the backend returns them.
                 </AppText>
               </View>
 
@@ -218,6 +239,30 @@ export default function ScanScreen() {
               style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}
               resizeMode="cover"
             />
+
+            {showMasks ? (
+              <Svg
+                width={PREVIEW_SIZE}
+                height={PREVIEW_SIZE}
+                style={{ position: "absolute", left: 0, top: 0 }}
+              >
+                {detections.map((d, idx) => {
+                  const polygon = d.mask?.polygon;
+                  if (!polygon || polygon.length < 3) {
+                    return null;
+                  }
+                  return (
+                    <Polygon
+                      key={`mask-${d.name}-${idx}`}
+                      points={scalePolygon(polygon)}
+                      fill="rgba(34,197,94,0.20)"
+                      stroke="rgba(34,197,94,0.9)"
+                      strokeWidth={1.5}
+                    />
+                  );
+                })}
+              </Svg>
+            ) : null}
 
             {showBoxes
               ? detections.map((d, idx) => {
@@ -297,7 +342,9 @@ export default function ScanScreen() {
                   className="mb-2 flex-row items-center justify-between rounded-lg bg-zinc-100 px-3 py-2"
                 >
                   <AppText className="font-medium">{item.name}</AppText>
-                  <AppText className="text-zinc-500">{item.quantity ?? "detected"}</AppText>
+                  <AppText className="text-zinc-500">
+                    {item.quantity ? `×${item.quantity}` : "detected"}
+                  </AppText>
                 </View>
               ))}
             </View>
@@ -337,6 +384,16 @@ export default function ScanScreen() {
               </View>
               <AppText className="mt-1 text-xs text-zinc-500">
                 Turn off for a cleaner result view.
+              </AppText>
+            </View>
+
+            <View className="mb-3 rounded-xl bg-zinc-100 px-3 py-3">
+              <View className="flex-row items-center justify-between">
+                <AppText className="font-medium">Show segmentation masks</AppText>
+                <Switch value={showMasks} onValueChange={setShowMasks} />
+              </View>
+              <AppText className="mt-1 text-xs text-zinc-500">
+                Uses mask polygons returned by backend SAM inference.
               </AppText>
             </View>
 
