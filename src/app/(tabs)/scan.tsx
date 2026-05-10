@@ -8,14 +8,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  Image as RNImage,
-  Modal,
-  Pressable,
-  ScrollView,
-  Switch,
-  View,
+    ActivityIndicator,
+    Image,
+    Modal,
+    Pressable,
+    Image as RNImage,
+    ScrollView,
+    Switch,
+    View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Polygon } from "react-native-svg";
@@ -36,9 +36,15 @@ export default function ScanScreen() {
   const [lastConfidence, setLastConfidence] = useState<number | null>(null);
   const [lastImageUri, setLastImageUri] = useState<string | null>(null);
   const [detections, setDetections] = useState<Detection[]>([]);
-  const [showBoxes, setShowBoxes] = useState(APP_CONFIG.vision.drawBoxesDefault);
-  const [showMasks, setShowMasks] = useState(APP_CONFIG.vision.drawMasksDefault);
-  const [scoreThreshold, setScoreThreshold] = useState(APP_CONFIG.vision.scoreThreshold);
+  const [showBoxes, setShowBoxes] = useState(
+    APP_CONFIG.vision.drawBoxesDefault,
+  );
+  const [showMasks, setShowMasks] = useState(
+    APP_CONFIG.vision.drawMasksDefault,
+  );
+  const [scoreThreshold, setScoreThreshold] = useState(
+    APP_CONFIG.vision.scoreThreshold,
+  );
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const hasIngredients = ingredients.length > 0;
@@ -50,15 +56,16 @@ export default function ScanScreen() {
   }, [lastConfidence]);
 
   async function cropToInferenceSquare(imageUri: string): Promise<string> {
-    const { width, height } = await new Promise<{ width: number; height: number }>(
-      (resolve, reject) => {
-        RNImage.getSize(
-          imageUri,
-          (w, h) => resolve({ width: w, height: h }),
-          (err) => reject(err),
-        );
-      },
-    );
+    const { width, height } = await new Promise<{
+      width: number;
+      height: number;
+    }>((resolve, reject) => {
+      RNImage.getSize(
+        imageUri,
+        (w, h) => resolve({ width: w, height: h }),
+        (err) => reject(err),
+      );
+    });
 
     const side = Math.min(width, height);
     const originX = Math.floor((width - side) / 2);
@@ -122,11 +129,13 @@ export default function ScanScreen() {
 
   function scalePolygon(points: [number, number][]) {
     const scale = PREVIEW_SIZE / MODEL_IMAGE_SIZE;
-    return points.map(([x, y]) => {
-      const sx = Math.max(0, Math.min(PREVIEW_SIZE, x * scale));
-      const sy = Math.max(0, Math.min(PREVIEW_SIZE, y * scale));
-      return `${sx},${sy}`;
-    }).join(" ");
+    return points
+      .map(([x, y]) => {
+        const sx = Math.max(0, Math.min(PREVIEW_SIZE, x * scale));
+        const sy = Math.max(0, Math.min(PREVIEW_SIZE, y * scale));
+        return `${sx},${sy}`;
+      })
+      .join(" ");
   }
 
   const settingsButton = (
@@ -141,7 +150,10 @@ export default function ScanScreen() {
   if (mode === "camera") {
     return (
       <View className="flex-1 bg-black">
-        <CameraCapture onCapture={handleCapture} topRightOverlay={settingsButton} />
+        <CameraCapture
+          onCapture={handleCapture}
+          topRightOverlay={settingsButton}
+        />
 
         <Modal
           visible={settingsOpen}
@@ -155,7 +167,9 @@ export default function ScanScreen() {
               style={{ paddingBottom: Math.max(insets.bottom + 14, 24) }}
             >
               <View className="mb-4 flex-row items-center justify-between">
-                <AppText className="text-xl font-semibold">Scan Settings</AppText>
+                <AppText className="text-xl font-semibold">
+                  Scan Settings
+                </AppText>
                 <Pressable onPress={() => setSettingsOpen(false)}>
                   <Ionicons name="close" size={24} color="#111827" />
                 </Pressable>
@@ -167,13 +181,16 @@ export default function ScanScreen() {
                   <Switch value={showBoxes} onValueChange={setShowBoxes} />
                 </View>
                 <AppText className="mt-1 text-xs text-zinc-500">
-                  Default comes from runtime-config.json. This switch changes current session only.
+                  Default comes from runtime-config.json. This switch changes
+                  current session only.
                 </AppText>
               </View>
 
               <View className="mb-3 rounded-xl bg-zinc-100 px-3 py-3">
                 <View className="flex-row items-center justify-between">
-                  <AppText className="font-medium">Show segmentation masks</AppText>
+                  <AppText className="font-medium">
+                    Show segmentation masks
+                  </AppText>
                   <Switch value={showMasks} onValueChange={setShowMasks} />
                 </View>
                 <AppText className="mt-1 text-xs text-zinc-500">
@@ -187,16 +204,22 @@ export default function ScanScreen() {
                   <Pressable
                     className="rounded-lg bg-zinc-200 px-3 py-1"
                     onPress={() =>
-                      setScoreThreshold((v) => Math.max(0.1, Math.round((v - 0.05) * 100) / 100))
+                      setScoreThreshold((v) =>
+                        Math.max(0.1, Math.round((v - 0.05) * 100) / 100),
+                      )
                     }
                   >
                     <AppText className="text-base">-</AppText>
                   </Pressable>
-                  <AppText className="text-base font-medium">{scoreThreshold.toFixed(2)}</AppText>
+                  <AppText className="text-base font-medium">
+                    {scoreThreshold.toFixed(2)}
+                  </AppText>
                   <Pressable
                     className="rounded-lg bg-zinc-200 px-3 py-1"
                     onPress={() =>
-                      setScoreThreshold((v) => Math.min(0.95, Math.round((v + 0.05) * 100) / 100))
+                      setScoreThreshold((v) =>
+                        Math.min(0.95, Math.round((v + 0.05) * 100) / 100),
+                      )
                     }
                   >
                     <AppText className="text-base">+</AppText>
@@ -216,7 +239,7 @@ export default function ScanScreen() {
   return (
     <View className="flex-1 bg-black">
       <View className="flex-1 items-center justify-start px-4 pt-14">
-        <View className="mb-3 w-full max-w-[380px] flex-row items-center justify-between">
+        <View className="mb-3 w-full max-h-77.5 flex-row items-center justify-between">
           <Pressable
             className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
             onPress={resetToCamera}
@@ -233,7 +256,10 @@ export default function ScanScreen() {
         </View>
 
         {lastImageUri ? (
-          <View className="overflow-hidden rounded-2xl" style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}>
+          <View
+            className="overflow-hidden rounded-2xl"
+            style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}
+          >
             <Image
               source={{ uri: lastImageUri }}
               style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}
@@ -303,14 +329,16 @@ export default function ScanScreen() {
       </View>
 
       <View
-        className="max-h-[310px] rounded-t-3xl bg-white px-5 pt-4"
+        className="max-h-77.5 rounded-t-3xl bg-white px-5 pt-4"
         style={{ paddingBottom: Math.max(insets.bottom + 14, 24) }}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="mb-3 flex-row items-center justify-between">
             <AppText className="text-2xl font-semibold">Scan result</AppText>
             <View className="rounded-full bg-zinc-100 px-3 py-1">
-              <AppText className="text-sm text-zinc-700">Confidence {confidenceText}</AppText>
+              <AppText className="text-sm text-zinc-700">
+                Confidence {confidenceText}
+              </AppText>
             </View>
           </View>
 
@@ -329,13 +357,17 @@ export default function ScanScreen() {
 
           {!loading && !error && !hasIngredients ? (
             <View className="mb-3 rounded-xl bg-zinc-100 px-3 py-3">
-              <AppText className="text-zinc-700">No matching items detected.</AppText>
+              <AppText className="text-zinc-700">
+                No matching items detected.
+              </AppText>
             </View>
           ) : null}
 
           {hasIngredients ? (
             <View className="mb-3">
-              <AppText className="mb-2 font-medium">Detected items ({ingredients.length})</AppText>
+              <AppText className="mb-2 font-medium">
+                Detected items ({ingredients.length})
+              </AppText>
               {ingredients.map((item) => (
                 <View
                   key={item.id}
@@ -389,7 +421,9 @@ export default function ScanScreen() {
 
             <View className="mb-3 rounded-xl bg-zinc-100 px-3 py-3">
               <View className="flex-row items-center justify-between">
-                <AppText className="font-medium">Show segmentation masks</AppText>
+                <AppText className="font-medium">
+                  Show segmentation masks
+                </AppText>
                 <Switch value={showMasks} onValueChange={setShowMasks} />
               </View>
               <AppText className="mt-1 text-xs text-zinc-500">
@@ -403,16 +437,22 @@ export default function ScanScreen() {
                 <Pressable
                   className="rounded-lg bg-zinc-200 px-3 py-1"
                   onPress={() =>
-                    setScoreThreshold((v) => Math.max(0.1, Math.round((v - 0.05) * 100) / 100))
+                    setScoreThreshold((v) =>
+                      Math.max(0.1, Math.round((v - 0.05) * 100) / 100),
+                    )
                   }
                 >
                   <AppText className="text-base">-</AppText>
                 </Pressable>
-                <AppText className="text-base font-medium">{scoreThreshold.toFixed(2)}</AppText>
+                <AppText className="text-base font-medium">
+                  {scoreThreshold.toFixed(2)}
+                </AppText>
                 <Pressable
                   className="rounded-lg bg-zinc-200 px-3 py-1"
                   onPress={() =>
-                    setScoreThreshold((v) => Math.min(0.95, Math.round((v + 0.05) * 100) / 100))
+                    setScoreThreshold((v) =>
+                      Math.min(0.95, Math.round((v + 0.05) * 100) / 100),
+                    )
                   }
                 >
                   <AppText className="text-base">+</AppText>
