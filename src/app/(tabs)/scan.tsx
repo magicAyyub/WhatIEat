@@ -1,10 +1,6 @@
-import { AppText } from "@/components/ui/app-text";
-import { View } from "react-native";
+import { Redirect } from "expo-router";
 
-export default function ScanScreen() {
-  return (
-    <View className="flex-1 items-center justify-center">
-      <AppText className="text-lg font-medium">Scan Screen</AppText>
-    </View>
-  );
+/** @deprecated Use /(tabs)/frigo — kept for deep links */
+export default function ScanRedirect() {
+  return <Redirect href="/(tabs)/frigo" />;
 }

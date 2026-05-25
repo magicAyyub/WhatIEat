@@ -1,5 +1,7 @@
-import type { Ingredient, UserProfile } from "@/types/ingredient";
+import type { Ingredient } from "@/types/ingredient";
 import { create } from "zustand";
+
+export { useProfileStore } from "./profile-store";
 
 // ---------------------------------------------------------------------------
 // Fridge store — ingredients detected from the last scan
@@ -22,23 +24,3 @@ export const useFridgeStore = create<FridgeStore>((set) => ({
   clearIngredients: () => set({ ingredients: [] }),
 }));
 
-// ---------------------------------------------------------------------------
-// Profile store — user dietary preferences & objectives
-// ---------------------------------------------------------------------------
-
-type ProfileStore = {
-  profile: UserProfile;
-  setProfile: (updates: Partial<UserProfile>) => void;
-};
-
-const defaultProfile: UserProfile = {
-  dietaryRestrictions: [],
-  sportsObjective: "maintenance",
-  calorieTarget: 2000,
-};
-
-export const useProfileStore = create<ProfileStore>((set) => ({
-  profile: defaultProfile,
-  setProfile: (updates) =>
-    set((state) => ({ profile: { ...state.profile, ...updates } })),
-}));

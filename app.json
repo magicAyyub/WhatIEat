@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     //"newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "WhatIEat a besoin d'accès à votre caméra pour scanner votre frigo.",
+        "NSPhotoLibraryUsageDescription": "WhatIEat a besoin d'accès à votre galerie pour importer des photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +22,11 @@
         "backgroundImage": "./src/assets/images/android-icon-background.png",
         "monochromeImage": "./src/assets/images/android-icon-monochrome.png"
       },
-      // "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {

@@ -1,0 +1,16 @@
+export const colors = {
+  sage: "#3D6B4D",
+  sageMuted: "#E8F0EA",
+  cream: "#F9F8F4",
+  macroProtein: "#2563EB",
+  macroCarbs: "#EA580C",
+  macroFat: "#DB2777",
+  expiringBg: "#FEF2F2",
+  expiringBorder: "#FECACA",
+  destructive: "#B91C1C",
+  mutedText: "#6B7280",
+  border: "#E5E7EB",
+  white: "#FFFFFF",
+  tagGreen: "#DCFCE7",
+  tagBlue: "#DBEAFE",
+} as const;

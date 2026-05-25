@@ -6,11 +6,7 @@ export type Ingredient = {
   expiresAt?: string; // ISO date string
 };
 
-export type UserProfile = {
-  dietaryRestrictions: string[]; // e.g. ["gluten-free", "vegan"]
-  sportsObjective?: "weight-loss" | "muscle-gain" | "maintenance";
-  calorieTarget?: number;
-};
+export type { UserProfile, SportsObjective, ActivityLevel } from "./profile";
 
 export type Recipe = {
   id: string;
