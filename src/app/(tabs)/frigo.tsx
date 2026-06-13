@@ -11,6 +11,9 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useFridgeStore } from "@/store";
+import { useRouter } from "expo-router";
+import type { Ingredient } from "@/types/ingredient";
 
 const categories = [
   "Tout",
@@ -21,43 +24,31 @@ const categories = [
   "Céréales",
 ];
 
-interface InventoryItem {
-  name: string;
-  quantity: string;
-  expiresIn?: number;
-  emoji: string;
-  category: string;
-}
-
-const initialItems: InventoryItem[] = [
-  { name: "Poulet", quantity: "500g", expiresIn: 4, emoji: "🍗", category: "Protéines" },
-  { name: "Saumon frais", quantity: "200g", expiresIn: 1, emoji: "🐟", category: "Protéines" },
-  { name: "Œufs", quantity: "6 pièces", expiresIn: 8, emoji: "🥚", category: "Protéines" },
-  { name: "Avocat", quantity: "2 pièces", expiresIn: 1, emoji: "🥑", category: "Légumes" },
-  { name: "Tomates cerises", quantity: "250g", expiresIn: 0, emoji: "🍅", category: "Légumes" },
-  { name: "Brocoli", quantity: "1 tête", expiresIn: 3, emoji: "🥦", category: "Légumes" },
-  { name: "Carottes", quantity: "500g", expiresIn: 10, emoji: "🥕", category: "Légumes" },
-  { name: "Yaourt grec", quantity: "500g", expiresIn: 2, emoji: "🥛", category: "Laitier" },
-  { name: "Fromage râpé", quantity: "150g", expiresIn: 15, emoji: "🧀", category: "Laitier" },
-  { name: "Riz basmati", quantity: "1kg", expiresIn: 90, emoji: "🍚", category: "Céréales" },
-  { name: "Quinoa", quantity: "500g", expiresIn: 60, emoji: "🌾", category: "Céréales" },
-  { name: "Bananes", quantity: "3 pièces", expiresIn: 3, emoji: "🍌", category: "Fruits" },
-  { name: "Myrtilles", quantity: "125g", expiresIn: 2, emoji: "🫐", category: "Fruits" },
-  { name: "Mangue", quantity: "1 pièce", expiresIn: 2, emoji: "🥭", category: "Fruits" },
-];
-
 function formatExpiry(expiresIn?: number) {
   if (expiresIn === undefined) return null;
   if (expiresIn === 0) return "Aujourd'hui";
   return `${expiresIn}j`;
 }
 
+function getExpiresIn(expiresAt?: string): number | undefined {
+  if (!expiresAt) return undefined;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const exp = new Date(expiresAt);
+  exp.setHours(0, 0, 0, 0);
+  const diffTime = exp.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return Math.max(0, diffDays);
+}
+
 function InventoryItemRow({
   item,
   variant,
+  onDelete,
 }: {
-  item: InventoryItem;
+  item: Ingredient & { expiresIn?: number };
   variant: "expiring" | "stock";
+  onDelete: () => void;
 }) {
   const expiryLabel = formatExpiry(item.expiresIn);
   const isExpiring = variant === "expiring";
@@ -78,28 +69,38 @@ function InventoryItemRow({
       }
     >
       <View className="flex-row items-center gap-3 flex-1">
-        <AppText className="text-2xl">{item.emoji}</AppText>
+        <AppText className="text-2xl">{item.emoji || "❓"}</AppText>
         <View className="flex-1">
           <AppText className="text-[15px] font-semibold text-foreground">
             {item.name}
           </AppText>
           <AppText className="text-[13px] text-muted-foreground mt-0.5">
-            {item.quantity}
+            {item.quantity || "1"}
           </AppText>
         </View>
       </View>
-      {isExpiring && expiryLabel && (
-        <View className="flex-row items-center gap-1">
-          <Ionicons name="warning" size={14} color={colors.destructive} />
-          <AppText
-            className={`text-[13px] font-semibold ${
-              item.expiresIn === 0 ? "text-destructive" : "text-muted-foreground"
-            }`}
-          >
-            {expiryLabel}
-          </AppText>
-        </View>
-      )}
+      
+      <View className="flex-row items-center gap-3">
+        {isExpiring && expiryLabel && (
+          <View className="flex-row items-center gap-1">
+            <Ionicons name="warning" size={14} color={colors.destructive} />
+            <AppText
+              className={`text-[13px] font-semibold ${
+                item.expiresIn === 0 ? "text-destructive" : "text-muted-foreground"
+              }`}
+            >
+              {expiryLabel}
+            </AppText>
+          </View>
+        )}
+        
+        <Pressable
+          onPress={onDelete}
+          className="w-8 h-8 rounded-full items-center justify-center bg-zinc-50 active:opacity-60"
+        >
+          <Ionicons name="trash-outline" size={16} color={colors.mutedText} />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -107,8 +108,19 @@ function InventoryItemRow({
 export default function FrigoScreen() {
   const [activeCategory, setActiveCategory] = useState("Tout");
   const [search, setSearch] = useState("");
-  const [items] = useState<InventoryItem[]>(initialItems);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const router = useRouter();
+  const ingredients = useFridgeStore((s) => s.ingredients);
+  const removeIngredient = useFridgeStore((s) => s.removeIngredient);
+
+  const items = ingredients.map((ing) => ({
+    ...ing,
+    expiresIn: getExpiresIn(ing.expiresAt),
+    category: ing.category || "Autre",
+    emoji: ing.emoji || "❓",
+    quantity: ing.quantity || "1",
+  }));
 
   const filtered = items.filter((item) => {
     const matchCategory =
@@ -131,10 +143,13 @@ export default function FrigoScreen() {
         allowsEditing: false,
         quality: 1,
       });
-      if (!result.canceled && result.assets[0]) {
-        Alert.alert("Photo prise", "Image prête à être analysée");
-      }
       setMenuOpen(false);
+      if (!result.canceled && result.assets[0]) {
+        router.push({
+          pathname: "/(tabs)/scan",
+          params: { imageUri: result.assets[0].uri },
+        });
+      }
     } catch (error) {
       Alert.alert("Erreur", `Impossible d'accéder à la caméra: ${String(error)}`);
     }
@@ -147,10 +162,13 @@ export default function FrigoScreen() {
         allowsEditing: false,
         quality: 1,
       });
-      if (!result.canceled && result.assets[0]) {
-        Alert.alert("Image sélectionnée", "Image prête à être analysée");
-      }
       setMenuOpen(false);
+      if (!result.canceled && result.assets[0]) {
+        router.push({
+          pathname: "/(tabs)/scan",
+          params: { imageUri: result.assets[0].uri },
+        });
+      }
     } catch (error) {
       Alert.alert("Erreur", `Impossible d'accéder à la galerie: ${String(error)}`);
     }
@@ -238,9 +256,10 @@ export default function FrigoScreen() {
               </AppText>
               {expiringSoon.map((item) => (
                 <InventoryItemRow
-                  key={item.name}
+                  key={item.id}
                   item={item}
                   variant="expiring"
+                  onDelete={() => removeIngredient(item.id)}
                 />
               ))}
             </View>
@@ -250,9 +269,22 @@ export default function FrigoScreen() {
             <AppText className="text-[15px] font-bold text-foreground mb-3">
               En stock
             </AppText>
-            {others.map((item) => (
-              <InventoryItemRow key={item.name} item={item} variant="stock" />
-            ))}
+            {others.length === 0 && expiringSoon.length === 0 ? (
+              <View className="rounded-2xl border p-6 items-center justify-center bg-white border-zinc-100">
+                <AppText className="text-muted-foreground text-[14px]">
+                  Votre frigo est vide. Ajoutez des ingrédients !
+                </AppText>
+              </View>
+            ) : (
+              others.map((item) => (
+                <InventoryItemRow
+                  key={item.id}
+                  item={item}
+                  variant="stock"
+                  onDelete={() => removeIngredient(item.id)}
+                />
+              ))
+            )}
           </View>
         </View>
       </ScrollView>

@@ -5,10 +5,10 @@ import { AppText } from "@/components/ui/app-text";
 import { colors } from "@/constants/colors";
 import {
   featuredHomeRecipe,
-  homeExpiringItems,
 } from "@/constants/mock-data";
 import { Ionicons } from "@expo/vector-icons";
 import { useProfileStore } from "@/store/profile-store";
+import { useFridgeStore } from "@/store";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
 
@@ -28,6 +28,28 @@ export default function HomeScreen() {
   const calorieTarget = profile.calorieTarget || DEFAULT_CALORIE_TARGET;
   const caloriesRemaining = Math.max(0, calorieTarget - CALORIES_CURRENT);
   const calorieProgress = CALORIES_CURRENT / calorieTarget;
+
+  const ingredients = useFridgeStore((s) => s.ingredients);
+  const homeExpiringItems = ingredients
+    .map((ing) => {
+      let expiresIn = undefined;
+      if (ing.expiresAt) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const exp = new Date(ing.expiresAt);
+        exp.setHours(0, 0, 0, 0);
+        const diffTime = exp.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        expiresIn = Math.max(0, diffDays);
+      }
+      return {
+        name: ing.name,
+        quantity: ing.quantity || "1",
+        expiresIn,
+        emoji: ing.emoji || "❓",
+      };
+    })
+    .filter((i) => i.expiresIn !== undefined && i.expiresIn <= 2);
 
   return (
     <View className="flex-1 bg-background">
@@ -126,7 +148,7 @@ export default function HomeScreen() {
           </View>
 
           <Pressable
-            onPress={() => router.push("/(tabs)/frigo")}
+            onPress={() => router.push("/(tabs)/scan")}
             className="flex-row items-center gap-4 rounded-2xl px-4 py-4 active:opacity-90"
             style={{ backgroundColor: colors.sage }}
           >

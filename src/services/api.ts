@@ -1,6 +1,8 @@
 // Base URL for the FastAPI backend.
 // Set your local IP or production URL here.
-const BASE_URL = "http://192.168.1.100:8000"; // TODO: move to env config
+import { APP_CONFIG } from "@/config/runtime";
+
+export const BASE_URL = APP_CONFIG.apiBaseUrl;
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";

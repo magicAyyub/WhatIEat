@@ -2,13 +2,13 @@
 
 > Scan your fridge, detect ingredients, and get personalized recipe suggestions based on your dietary profile and calorie goals.
 
----
+The vision backend repo is [here](https://github.com/magicAyyub/fridge_detector).
 
 ## What it does
 
-1. **Scan** — take a photo of your fridge; the app sends it to a FastAPI vision API and detects ingredients automatically.
-2. **Recipes** — get recipe suggestions matched to your detected ingredients and dietary preferences.
-3. **Profile** — set dietary restrictions, calorie targets, and preferences that influence every recommendation.
+1. **Scan** | take a photo of your fridge; the app sends it to a FastAPI vision API and detects ingredients automatically.
+2. **Recipes** | get recipe suggestions matched to your detected ingredients and dietary preferences.
+3. **Profile** | set dietary restrictions, calorie targets, and preferences that influence every recommendation.
 
 ---
 
@@ -73,10 +73,33 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the full breakdown: conventions, data
 
 ## Backend
 
-The FastAPI backend lives in a separate repository. Update the base URL in `src/services/api.ts` once you deploy it:
+The FastAPI backend lives in a separate repository. Update the base URL in `src/config/runtime-config.json` once you deploy it.
 
-```ts
-const BASE_URL = "https://your-api-url.com";
+In development :
+
+make a share c
+check your ip :
+
+```bash
+ipconfig getifaddr en0 || ipconfig getifaddr en1 || ifconfig | grep 'inet '
+```
+
+then use it. Exemple :
+
+```json
+{
+  "apiBaseUrl": "http://172.20.10.10:8000",
+  ...
+}
+```
+
+example in production:
+
+```json
+{
+  "apiBaseUrl": "https://your-deployed-backend.com",
+  ...
+}
 ```
 
 ---
