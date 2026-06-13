@@ -14,6 +14,7 @@ import {
 import { useFridgeStore } from "@/store";
 import { useRouter } from "expo-router";
 import type { Ingredient } from "@/types/ingredient";
+import { getSafeIconName } from "@/helpers/utils/icons";
 
 const categories = [
   "Tout",
@@ -71,7 +72,7 @@ function InventoryItemRow({
       <View className="flex-row items-center gap-3.5 flex-1">
         <View className="w-10 h-10 rounded-xl items-center justify-center bg-zinc-50 border border-zinc-100">
           <MaterialCommunityIcons
-            name={(item.icon || "food-variant") as any}
+            name={getSafeIconName(item.icon) as any}
             size={22}
             color={colors.sage}
           />

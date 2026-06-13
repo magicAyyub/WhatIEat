@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "@/components/ui/app-text";
 import { colors } from "@/constants/colors";
 import type { Ingredient } from "@/types/ingredient";
+import { getSafeIconName } from "@/helpers/utils/icons";
 
 type Props = {
   loading: boolean;
@@ -84,7 +85,7 @@ export function ScanResultPanel({
                 <View className="flex-row items-center gap-3">
                   <View className="w-9 h-9 rounded-lg items-center justify-center bg-zinc-50 border border-zinc-100">
                     <MaterialCommunityIcons
-                      name={(item.icon || "food-variant") as any}
+                      name={getSafeIconName(item.icon) as any}
                       size={20}
                       color={colors.sage}
                     />

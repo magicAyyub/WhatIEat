@@ -16,17 +16,17 @@ const initialIngredients: Ingredient[] = [
   { id: "poulet", name: "Poulet", quantity: "500g", expiresAt: getExpiryDate(4), icon: "food-drumstick", category: "Protéines" },
   { id: "saumon", name: "Saumon frais", quantity: "200g", expiresAt: getExpiryDate(1), icon: "fish", category: "Protéines" },
   { id: "oeufs", name: "Œufs", quantity: "6 pièces", expiresAt: getExpiryDate(8), icon: "egg", category: "Protéines" },
-  { id: "avocat", name: "Avocat", quantity: "2 pièces", expiresAt: getExpiryDate(1), icon: "avocado", category: "Légumes" },
-  { id: "tomate", name: "Tomates cerises", quantity: "250g", expiresAt: getExpiryDate(0), icon: "tomato", category: "Légumes" },
-  { id: "brocoli", name: "Brocoli", quantity: "1 tête", expiresAt: getExpiryDate(3), icon: "broccoli", category: "Légumes" },
+  { id: "avocat", name: "Avocat", quantity: "2 pièces", expiresAt: getExpiryDate(1), icon: "food-variant", category: "Légumes" },
+  { id: "tomate", name: "Tomates cerises", quantity: "250g", expiresAt: getExpiryDate(0), icon: "fruit-cherries", category: "Légumes" },
+  { id: "brocoli", name: "Brocoli", quantity: "1 tête", expiresAt: getExpiryDate(3), icon: "leaf", category: "Légumes" },
   { id: "carotte", name: "Carottes", quantity: "500g", expiresAt: getExpiryDate(10), icon: "carrot", category: "Légumes" },
   { id: "yaourt", name: "Yaourt grec", quantity: "500g", expiresAt: getExpiryDate(2), icon: "cup", category: "Laitier" },
   { id: "fromage", name: "Fromage râpé", quantity: "150g", expiresAt: getExpiryDate(15), icon: "cheese", category: "Laitier" },
   { id: "riz", name: "Riz basmati", quantity: "1kg", expiresAt: getExpiryDate(90), icon: "rice", category: "Céréales" },
   { id: "quinoa", name: "Quinoa", quantity: "500g", expiresAt: getExpiryDate(60), icon: "barley", category: "Céréales" },
-  { id: "bananes", name: "Bananes", quantity: "3 pièces", expiresAt: getExpiryDate(3), icon: "banana", category: "Fruits" },
+  { id: "bananes", name: "Bananes", quantity: "3 pièces", expiresAt: getExpiryDate(3), icon: "food-variant", category: "Fruits" },
   { id: "myrtilles", name: "Myrtilles", quantity: "125g", expiresAt: getExpiryDate(2), icon: "fruit-grapes", category: "Fruits" },
-  { id: "mangue", name: "Mangue", quantity: "1 pièce", expiresAt: getExpiryDate(2), icon: "fruit-mango", category: "Fruits" },
+  { id: "mangue", name: "Mangue", quantity: "1 pièce", expiresAt: getExpiryDate(2), icon: "fruit-citrus", category: "Fruits" },
 ];
 
 type FridgeStore = {
