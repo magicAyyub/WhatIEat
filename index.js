@@ -1,5 +1,5 @@
 if (typeof global.DOMException === "undefined") {
-  (global as any).DOMException = Error;
+  global.DOMException = Error;
 }
 
 import "expo-router/entry";
