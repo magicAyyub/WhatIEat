@@ -1,7 +1,3 @@
-if (typeof global.DOMException === "undefined") {
-  (global as any).DOMException = Error;
-}
-
 import {
     Inter_400Regular,
     Inter_500Medium,

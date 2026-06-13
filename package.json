@@ -1,7 +1,7 @@
 {
   "name": "what-i-eat",
   "version": "v1.0.0-beta.3",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "scripts": {
     "start": "expo start -c",
     "android": "expo start --android -c",
