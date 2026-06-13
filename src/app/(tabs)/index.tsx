@@ -11,6 +11,7 @@ import { useProfileStore } from "@/store/profile-store";
 import { useFridgeStore } from "@/store";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const CALORIES_CURRENT = 1240;
 const DEFAULT_CALORIE_TARGET = 2100;
@@ -149,22 +150,39 @@ export default function HomeScreen() {
 
           <Pressable
             onPress={() => router.push("/(tabs)/scan")}
-            className="flex-row items-center gap-4 rounded-2xl px-4 py-4 active:opacity-90"
-            style={{ backgroundColor: colors.sage }}
+            className="rounded-2xl overflow-hidden active:opacity-90 shadow-sm border border-zinc-100 relative"
           >
-            <View
-              className="w-12 h-12 rounded-xl items-center justify-center"
-              style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
-            >
-              <Ionicons name="camera-outline" size={26} color="#fff" />
-            </View>
-            <View className="flex-1">
-              <AppText className="text-[16px] font-bold text-white">
-                Scanne ton frigo
-              </AppText>
-              <AppText className="text-[13px] text-white/85 mt-0.5">
-                Ajoute tes ingrédients en un clic grâce à l&apos;IA
-              </AppText>
+            <LinearGradient
+              colors={["#3D6B4D", "#588E6B"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0 }}
+            />
+            <View className="flex-row items-center gap-4 px-5 py-5">
+              <View
+                className="w-12 h-12 rounded-2xl items-center justify-center shadow-sm"
+                style={{ backgroundColor: "rgba(255,255,255,0.18)" }}
+              >
+                <Ionicons name="camera-outline" size={24} color="#fff" />
+              </View>
+              <View className="flex-1">
+                <View className="flex-row items-center mb-1">
+                  <View className="bg-white/20 rounded-full px-2 py-0.5">
+                    <AppText className="text-[10px] font-bold text-white uppercase tracking-wider">
+                      Détection IA
+                    </AppText>
+                  </View>
+                </View>
+                <AppText className="text-[17px] font-bold text-white leading-tight">
+                  Scanne ton frigo
+                </AppText>
+                <AppText className="text-[13px] text-white/80 mt-1 leading-snug">
+                  Prends une photo pour identifier et ajouter tes ingrédients en 1 clic
+                </AppText>
+              </View>
+              <View className="w-8 h-8 rounded-full items-center justify-center bg-white/10">
+                <Ionicons name="chevron-forward-outline" size={18} color="#fff" />
+              </View>
             </View>
           </Pressable>
 
