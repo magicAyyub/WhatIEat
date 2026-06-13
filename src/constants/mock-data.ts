@@ -9,9 +9,9 @@ export const RECIPE_IMAGES = {
 } as const;
 
 export const homeExpiringItems: ExpiringItem[] = [
-  { name: "Avocat", quantity: "2 pièces", expiresIn: 1, emoji: "🥑" },
-  { name: "Yaourt grec", quantity: "500g", expiresIn: 2, emoji: "🥛" },
-  { name: "Tomates cerises", quantity: "250g", expiresIn: 0, emoji: "🍅" },
+  { name: "Avocat", quantity: "2 pièces", expiresIn: 1, icon: "avocado" },
+  { name: "Yaourt grec", quantity: "500g", expiresIn: 2, icon: "cup" },
+  { name: "Tomates cerises", quantity: "250g", expiresIn: 0, icon: "tomato" },
 ];
 
 export const featuredHomeRecipe: RecipeCardData = {

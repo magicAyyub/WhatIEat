@@ -4,7 +4,7 @@ export type Ingredient = {
   quantity?: string;
   unit?: string;
   expiresAt?: string; // ISO date string
-  emoji?: string;
+  icon?: string;
   category?: string;
 };
 

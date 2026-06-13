@@ -58,39 +58,39 @@ export function scalePolygon(points: [number, number][]) {
 
 export const INGREDIENT_MAP: Record<
   string,
-  { nameFr: string; emoji: string; category: string; defaultExpiryDays: number }
+  { nameFr: string; icon: string; category: string; defaultExpiryDays: number }
 > = {
-  apple: { nameFr: "Pommes", emoji: "🍎", category: "Fruits", defaultExpiryDays: 7 },
-  banana: { nameFr: "Bananes", emoji: "🍌", category: "Fruits", defaultExpiryDays: 3 },
-  cabbage: { nameFr: "Chou", emoji: "🥬", category: "Légumes", defaultExpiryDays: 7 },
-  carrot: { nameFr: "Carottes", emoji: "🥕", category: "Légumes", defaultExpiryDays: 10 },
-  cucumber: { nameFr: "Concombre", emoji: "🥒", category: "Légumes", defaultExpiryDays: 5 },
-  date: { nameFr: "Dattes", emoji: "🌴", category: "Fruits", defaultExpiryDays: 30 },
-  eggplant: { nameFr: "Aubergine", emoji: "🍆", category: "Légumes", defaultExpiryDays: 5 },
-  eggs: { nameFr: "Œufs", emoji: "🥚", category: "Protéines", defaultExpiryDays: 14 },
-  garlic: { nameFr: "Ail", emoji: "🧄", category: "Légumes", defaultExpiryDays: 30 },
-  lemon: { nameFr: "Citron", emoji: "🍋", category: "Fruits", defaultExpiryDays: 14 },
-  lettuce: { nameFr: "Salade", emoji: "🥬", category: "Légumes", defaultExpiryDays: 4 },
-  okra: { nameFr: "Gombo", emoji: "🥒", category: "Légumes", defaultExpiryDays: 5 },
-  onion: { nameFr: "Oignon", emoji: "🧅", category: "Légumes", defaultExpiryDays: 30 },
-  orange: { nameFr: "Orange", emoji: "🍊", category: "Fruits", defaultExpiryDays: 10 },
-  potato: { nameFr: "Pommes de terre", emoji: "🥔", category: "Légumes", defaultExpiryDays: 30 },
-  tomato: { nameFr: "Tomates", emoji: "🍅", category: "Légumes", defaultExpiryDays: 4 },
-  butter: { nameFr: "Beurre", emoji: "🧈", category: "Laitier", defaultExpiryDays: 21 },
-  cheese: { nameFr: "Fromage", emoji: "🧀", category: "Laitier", defaultExpiryDays: 14 },
-  milk: { nameFr: "Lait", emoji: "🥛", category: "Laitier", defaultExpiryDays: 7 },
-  yogurt: { nameFr: "Yaourt grec", emoji: "🥛", category: "Laitier", defaultExpiryDays: 10 },
-  bread: { nameFr: "Pain", emoji: "🍞", category: "Céréales", defaultExpiryDays: 3 },
-  beans: { nameFr: "Haricots", emoji: "🫘", category: "Légumes", defaultExpiryDays: 5 },
-  beef: { nameFr: "Bœuf", emoji: "🥩", category: "Protéines", defaultExpiryDays: 3 },
-  bulgur: { nameFr: "Boulghour", emoji: "🌾", category: "Céréales", defaultExpiryDays: 90 },
-  chicken: { nameFr: "Poulet", emoji: "🍗", category: "Protéines", defaultExpiryDays: 3 },
-  chickpea: { nameFr: "Pois chiches", emoji: "🫘", category: "Légumes", defaultExpiryDays: 5 },
-  fish: { nameFr: "Poisson", emoji: "🐟", category: "Protéines", defaultExpiryDays: 2 },
-  lamb: { nameFr: "Agneau", emoji: "🥩", category: "Protéines", defaultExpiryDays: 3 },
-  lentil: { nameFr: "Lentilles", emoji: "🫘", category: "Céréales", defaultExpiryDays: 90 },
-  rice: { nameFr: "Riz basmati", emoji: "🍚", category: "Céréales", defaultExpiryDays: 90 },
-  spinach: { nameFr: "Épinards", emoji: "🥬", category: "Légumes", defaultExpiryDays: 3 },
+  apple: { nameFr: "Pommes", icon: "food-apple", category: "Fruits", defaultExpiryDays: 7 },
+  banana: { nameFr: "Bananes", icon: "banana", category: "Fruits", defaultExpiryDays: 3 },
+  cabbage: { nameFr: "Chou", icon: "cabbage", category: "Légumes", defaultExpiryDays: 7 },
+  carrot: { nameFr: "Carottes", icon: "carrot", category: "Légumes", defaultExpiryDays: 10 },
+  cucumber: { nameFr: "Concombre", icon: "cucumber", category: "Légumes", defaultExpiryDays: 5 },
+  date: { nameFr: "Dattes", icon: "food-variant", category: "Fruits", defaultExpiryDays: 30 },
+  eggplant: { nameFr: "Aubergine", icon: "eggplant", category: "Légumes", defaultExpiryDays: 5 },
+  eggs: { nameFr: "Œufs", icon: "egg", category: "Protéines", defaultExpiryDays: 14 },
+  garlic: { nameFr: "Ail", icon: "garlic", category: "Légumes", defaultExpiryDays: 30 },
+  lemon: { nameFr: "Citron", icon: "lemon", category: "Fruits", defaultExpiryDays: 14 },
+  lettuce: { nameFr: "Salade", icon: "lettuce", category: "Légumes", defaultExpiryDays: 4 },
+  okra: { nameFr: "Gombo", icon: "food-variant", category: "Légumes", defaultExpiryDays: 5 },
+  onion: { nameFr: "Oignon", icon: "onion", category: "Légumes", defaultExpiryDays: 30 },
+  orange: { nameFr: "Orange", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 10 },
+  potato: { nameFr: "Pommes de terre", icon: "potato", category: "Légumes", defaultExpiryDays: 30 },
+  tomato: { nameFr: "Tomates", icon: "tomato", category: "Légumes", defaultExpiryDays: 4 },
+  butter: { nameFr: "Beurre", icon: "butter", category: "Laitier", defaultExpiryDays: 21 },
+  cheese: { nameFr: "Fromage", icon: "cheese", category: "Laitier", defaultExpiryDays: 14 },
+  milk: { nameFr: "Lait", icon: "glass-milk", category: "Laitier", defaultExpiryDays: 7 },
+  yogurt: { nameFr: "Yaourt grec", icon: "cup", category: "Laitier", defaultExpiryDays: 10 },
+  bread: { nameFr: "Pain", icon: "bread-slice", category: "Céréales", defaultExpiryDays: 3 },
+  beans: { nameFr: "Haricots", icon: "soy-bean", category: "Légumes", defaultExpiryDays: 5 },
+  beef: { nameFr: "Bœuf", icon: "food-steak", category: "Protéines", defaultExpiryDays: 3 },
+  bulgur: { nameFr: "Boulghour", icon: "barley", category: "Céréales", defaultExpiryDays: 90 },
+  chicken: { nameFr: "Poulet", icon: "food-drumstick", category: "Protéines", defaultExpiryDays: 3 },
+  chickpea: { nameFr: "Pois chiches", icon: "soy-bean", category: "Légumes", defaultExpiryDays: 5 },
+  fish: { nameFr: "Poisson", icon: "fish", category: "Protéines", defaultExpiryDays: 2 },
+  lamb: { nameFr: "Agneau", icon: "food-steak", category: "Protéines", defaultExpiryDays: 3 },
+  lentil: { nameFr: "Lentilles", icon: "barley", category: "Céréales", defaultExpiryDays: 90 },
+  rice: { nameFr: "Riz basmati", icon: "rice", category: "Céréales", defaultExpiryDays: 90 },
+  spinach: { nameFr: "Épinards", icon: "leaf", category: "Légumes", defaultExpiryDays: 3 },
 };
 
 export function getExpiryDateString(days: number): string {
@@ -108,7 +108,7 @@ export function mapScanToIngredient(raw: {
   const meta = INGREDIENT_MAP[raw.id.toLowerCase()];
   
   const name = meta ? meta.nameFr : raw.name;
-  const emoji = meta ? meta.emoji : "❓";
+  const icon = meta ? meta.icon : "food-variant";
   const category = meta ? meta.category : "Autre";
   const defaultExpiryDays = meta ? meta.defaultExpiryDays : 7;
   const expiresAt = getExpiryDateString(defaultExpiryDays);
@@ -132,7 +132,7 @@ export function mapScanToIngredient(raw: {
     quantity: displayQuantity,
     unit: raw.unit,
     expiresAt,
-    emoji,
+    icon,
     category,
   };
 }

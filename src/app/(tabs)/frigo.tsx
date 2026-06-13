@@ -1,6 +1,6 @@
 import { AppText } from "@/components/ui/app-text";
 import { colors } from "@/constants/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
@@ -68,8 +68,14 @@ function InventoryItemRow({
             }
       }
     >
-      <View className="flex-row items-center gap-3 flex-1">
-        <AppText className="text-2xl">{item.emoji || "❓"}</AppText>
+      <View className="flex-row items-center gap-3.5 flex-1">
+        <View className="w-10 h-10 rounded-xl items-center justify-center bg-zinc-50 border border-zinc-100">
+          <MaterialCommunityIcons
+            name={(item.icon || "food-variant") as any}
+            size={22}
+            color={colors.sage}
+          />
+        </View>
         <View className="flex-1">
           <AppText className="text-[15px] font-semibold text-foreground">
             {item.name}
@@ -118,7 +124,7 @@ export default function FrigoScreen() {
     ...ing,
     expiresIn: getExpiresIn(ing.expiresAt),
     category: ing.category || "Autre",
-    emoji: ing.emoji || "❓",
+    icon: ing.icon || "food-variant",
     quantity: ing.quantity || "1",
   }));
 

@@ -46,7 +46,7 @@ export default function HomeScreen() {
         name: ing.name,
         quantity: ing.quantity || "1",
         expiresIn,
-        emoji: ing.emoji || "❓",
+        icon: ing.icon || "food-variant",
       };
     })
     .filter((i) => i.expiresIn !== undefined && i.expiresIn <= 2);

@@ -1,5 +1,5 @@
 import { AppText } from "@/components/ui/app-text";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/colors";
 import { Pressable, View } from "react-native";
 
@@ -7,7 +7,7 @@ export type ExpiringItem = {
   name: string;
   quantity: string;
   expiresIn?: number;
-  emoji: string;
+  icon: string;
 };
 
 type ExpiringItemRowProps = {
@@ -34,8 +34,14 @@ export function ExpiringItemRow({ item, onPress }: ExpiringItemRowProps) {
         borderColor: colors.expiringBorder,
       }}
     >
-      <View className="flex-row items-center gap-3 flex-1">
-        <AppText className="text-2xl">{item.emoji}</AppText>
+      <View className="flex-row items-center gap-3.5 flex-1">
+        <View className="w-10 h-10 rounded-xl items-center justify-center bg-zinc-50 border border-zinc-100">
+          <MaterialCommunityIcons
+            name={(item.icon || "food-variant") as any}
+            size={22}
+            color={colors.sage}
+          />
+        </View>
         <View className="flex-1">
           <AppText className="text-[15px] font-semibold text-foreground">
             {item.name}

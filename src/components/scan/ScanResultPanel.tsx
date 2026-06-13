@@ -1,5 +1,6 @@
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { AppText } from "@/components/ui/app-text";
 import { colors } from "@/constants/colors";
@@ -80,8 +81,14 @@ export function ScanResultPanel({
                 className="mb-2 flex-row items-center justify-between rounded-2xl border bg-white px-4 py-3"
                 style={{ borderColor: colors.border }}
               >
-                <View className="flex-row items-center gap-2.5">
-                  <AppText className="text-[20px]">{item.emoji}</AppText>
+                <View className="flex-row items-center gap-3">
+                  <View className="w-9 h-9 rounded-lg items-center justify-center bg-zinc-50 border border-zinc-100">
+                    <MaterialCommunityIcons
+                      name={(item.icon || "food-variant") as any}
+                      size={20}
+                      color={colors.sage}
+                    />
+                  </View>
                   <AppText className="text-[15px] font-bold text-foreground">
                     {item.name}
                   </AppText>
