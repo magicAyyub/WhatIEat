@@ -19,14 +19,19 @@ export function TabBarIcon({ name, focused, size = 24 }: TabBarIconProps) {
   const color = focused ? colors.sage : colors.mutedText;
 
   return (
-    <View className="items-center justify-center min-w-[56px] pt-1">
-      <Ionicons name={name} size={size} color={color} />
+    <View className="items-center justify-center min-w-[56px] h-full relative">
       {focused && (
         <View
-          className="mt-1.5 rounded-full"
-          style={{ width: 28, height: 3, backgroundColor: colors.sage }}
+          className="absolute rounded-full"
+          style={{
+            top: -6,
+            width: 28,
+            height: 3,
+            backgroundColor: colors.sage,
+          }}
         />
       )}
+      <Ionicons name={name} size={size} color={color} style={{ marginTop: 4 }} />
     </View>
   );
 }
