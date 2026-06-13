@@ -110,7 +110,7 @@ export function ScanResultPanel({
               onPress={onAddIngredients}
             >
               <AppText className="text-[16px] font-bold text-white">
-                Ajouter au frigo 🧊
+                Ajouter au frigo
               </AppText>
             </Pressable>
           )}

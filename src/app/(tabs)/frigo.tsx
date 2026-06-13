@@ -192,7 +192,7 @@ export default function FrigoScreen() {
           <View className="flex-row justify-between items-start">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">
-                Mon Frigo 🧊
+                Mon Frigo
               </AppText>
               <AppText className="text-[15px] text-muted-foreground mt-1">
                 {items.length} ingrédients en stock
@@ -255,12 +255,15 @@ export default function FrigoScreen() {
 
           {expiringSoon.length > 0 && (
             <View>
-              <AppText
-                className="text-[14px] font-bold mb-3"
-                style={{ color: colors.destructive }}
-              >
-                ⚠️ À consommer rapidement
-              </AppText>
+              <View className="flex-row items-center gap-1.5 mb-3">
+                <Ionicons name="warning" size={16} color={colors.destructive} />
+                <AppText
+                  className="text-[14px] font-bold"
+                  style={{ color: colors.destructive }}
+                >
+                  À consommer rapidement
+                </AppText>
+              </View>
               {expiringSoon.map((item) => (
                 <InventoryItemRow
                   key={item.id}
