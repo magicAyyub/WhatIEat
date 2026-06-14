@@ -2,8 +2,12 @@ export type SportsObjective = "weight-loss" | "muscle-gain" | "maintenance";
 
 export type ActivityLevel = "sedentary" | "light" | "moderate" | "intense";
 
+/** Utilisé pour la formule Mifflin-St Jeor (métabolisme de base). */
+export type BiologicalSex = "male" | "female";
+
 export type UserProfile = {
   firstName: string;
+  sex: BiologicalSex;
   age: number;
   weightKg: number;
   heightCm: number;
@@ -16,6 +20,7 @@ export type UserProfile = {
 
 export const defaultUserProfile: UserProfile = {
   firstName: "",
+  sex: "male",
   age: 25,
   weightKg: 75,
   heightCm: 178,

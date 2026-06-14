@@ -9,10 +9,12 @@ import {
   ALLERGY_OPTIONS,
   GOAL_OPTIONS,
   OBJECTIVE_LABELS,
+  SEX_OPTIONS,
 } from "@/constants/onboarding";
 import { colors } from "@/constants/colors";
 import { useProfileStore } from "@/store/profile-store";
-import type { ActivityLevel, SportsObjective, UserProfile } from "@/types/profile";
+import { toOnboardingJson } from "@/utils/onboarding-payload";
+import type { ActivityLevel, BiologicalSex, SportsObjective, UserProfile } from "@/types/profile";
 import { calculateCalorieTarget } from "@/utils/calories";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -44,6 +46,7 @@ const STEP_ICONS = [
 
 function buildDraftProfile(
   firstName: string,
+  sex: BiologicalSex,
   age: string,
   weight: string,
   height: string,
@@ -53,6 +56,7 @@ function buildDraftProfile(
 ): UserProfile {
   const base = {
     firstName: firstName.trim(),
+    sex,
     age: parseInt(age, 10) || 25,
     weightKg: parseFloat(weight) || 75,
     heightCm: parseFloat(height) || 178,
@@ -83,6 +87,7 @@ export default function OnboardingScreen() {
 
   const [step, setStep] = useState(initialStep);
   const [firstName, setFirstName] = useState(profile.firstName);
+  const [sex, setSex] = useState<BiologicalSex>(profile.sex);
   const [age, setAge] = useState(String(profile.age || ""));
   const [weight, setWeight] = useState(String(profile.weightKg || ""));
   const [height, setHeight] = useState(String(profile.heightCm || ""));
@@ -95,6 +100,7 @@ export default function OnboardingScreen() {
     () =>
       buildDraftProfile(
         firstName,
+        sex,
         age,
         weight,
         height,
@@ -102,7 +108,7 @@ export default function OnboardingScreen() {
         allergies,
         activity,
       ),
-    [firstName, age, weight, height, goal, allergies, activity],
+    [firstName, sex, age, weight, height, goal, allergies, activity],
   );
 
   const shellStep = step + 1;
@@ -112,6 +118,7 @@ export default function OnboardingScreen() {
     if (step === 0) {
       setProfile({
         firstName: firstName.trim(),
+        sex,
         age: parseInt(age, 10) || profile.age,
         weightKg: parseFloat(weight) || profile.weightKg,
         heightCm: parseFloat(height) || profile.heightCm,
@@ -151,6 +158,7 @@ export default function OnboardingScreen() {
   const finish = () => {
     setProfile({
       firstName: firstName.trim(),
+      sex,
       age: parseInt(age, 10) || profile.age,
       weightKg: parseFloat(weight) || profile.weightKg,
       heightCm: parseFloat(height) || profile.heightCm,
@@ -163,6 +171,10 @@ export default function OnboardingScreen() {
       return;
     }
     completeOnboarding();
+    if (__DEV__) {
+      const json = toOnboardingJson(useProfileStore.getState().profile);
+      console.log("[WhatIEat] Onboarding payload JSON:\n", json);
+    }
     router.replace("/(tabs)");
   };
 
@@ -243,6 +255,34 @@ export default function OnboardingScreen() {
                 placeholder="Alex"
                 className="mb-4"
               />
+              <AppText className="text-[14px] font-semibold text-foreground mb-2">
+                Sexe
+              </AppText>
+              <View className="flex-row gap-3 mb-4">
+                {SEX_OPTIONS.map((option) => (
+                  <Pressable
+                    key={option.id}
+                    onPress={() => setSex(option.id)}
+                    className="flex-1 flex-row items-center justify-center gap-2 rounded-xl border py-3.5"
+                    style={{
+                      backgroundColor:
+                        sex === option.id ? colors.sageMuted : colors.white,
+                      borderColor:
+                        sex === option.id ? colors.sage : colors.border,
+                      borderWidth: sex === option.id ? 2 : 1,
+                    }}
+                  >
+                    <AppText className="text-lg">{option.emoji}</AppText>
+                    <AppText
+                      className={`text-[14px] font-semibold ${
+                        sex === option.id ? "text-sage" : "text-foreground"
+                      }`}
+                    >
+                      {option.title}
+                    </AppText>
+                  </Pressable>
+                ))}
+              </View>
               <View className="flex-row gap-3 mb-4">
                 <FormField
                   label="Poids (kg)"

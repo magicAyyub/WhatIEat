@@ -1,3 +1,4 @@
+import { ScanningOverlay } from "@/components/scan/scanning-overlay";
 import { ExpiringItemRow } from "@/components/whatieat/expiring-item-row";
 import { MacroRing } from "@/components/whatieat/macro-ring";
 import { RecipeCardLarge } from "@/components/whatieat/recipe-card-large";
@@ -7,6 +8,7 @@ import {
   featuredHomeRecipe,
   homeExpiringItems,
 } from "@/constants/mock-data";
+import { useFridgeScan } from "@/hooks/useFridgeScan";
 import { Ionicons } from "@expo/vector-icons";
 import { useProfileStore } from "@/store/profile-store";
 import { useRouter } from "expo-router";
@@ -25,12 +27,14 @@ const getGreeting = () => {
 export default function HomeScreen() {
   const router = useRouter();
   const { profile } = useProfileStore();
+  const { scanFridge, isScanning } = useFridgeScan();
   const calorieTarget = profile.calorieTarget || DEFAULT_CALORIE_TARGET;
   const caloriesRemaining = Math.max(0, calorieTarget - CALORIES_CURRENT);
   const calorieProgress = CALORIES_CURRENT / calorieTarget;
 
   return (
     <View className="flex-1 bg-background">
+      <ScanningOverlay visible={isScanning} />
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 24 }}
@@ -126,9 +130,13 @@ export default function HomeScreen() {
           </View>
 
           <Pressable
-            onPress={() => router.push("/(tabs)/frigo")}
+            onPress={() => scanFridge({ source: "camera", navigateToFrigo: true })}
+            disabled={isScanning}
             className="flex-row items-center gap-4 rounded-2xl px-4 py-4 active:opacity-90"
-            style={{ backgroundColor: colors.sage }}
+            style={{
+              backgroundColor: colors.sage,
+              opacity: isScanning ? 0.7 : 1,
+            }}
           >
             <View
               className="w-12 h-12 rounded-xl items-center justify-center"

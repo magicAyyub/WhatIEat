@@ -1,4 +1,6 @@
 import { defaultUserProfile, type UserProfile } from "@/types/profile";
+import type { OnboardingPayload } from "@/types/onboarding-payload";
+import { buildOnboardingPayload } from "@/utils/onboarding-payload";
 import { calculateCalorieTarget } from "@/utils/calories";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
@@ -11,6 +13,7 @@ type ProfileStore = {
   setProfile: (updates: Partial<UserProfile>) => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
+  getOnboardingPayload: () => OnboardingPayload;
 };
 
 export const useProfileStore = create<ProfileStore>()(
@@ -23,6 +26,7 @@ export const useProfileStore = create<ProfileStore>()(
         const next = { ...get().profile, ...updates };
         const withCalories =
           updates.age !== undefined ||
+          updates.sex !== undefined ||
           updates.weightKg !== undefined ||
           updates.heightCm !== undefined ||
           updates.activityLevel !== undefined ||
@@ -48,6 +52,7 @@ export const useProfileStore = create<ProfileStore>()(
         set({
           profile: { ...defaultUserProfile, hasCompletedOnboarding: false },
         }),
+      getOnboardingPayload: () => buildOnboardingPayload(get().profile),
     }),
     {
       name: "whatieat-profile",

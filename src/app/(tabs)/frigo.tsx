@@ -1,10 +1,15 @@
+import { ScanningOverlay } from "@/components/scan/scanning-overlay";
 import { AppText } from "@/components/ui/app-text";
 import { colors } from "@/constants/colors";
-import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useFridgeScan } from "@/hooks/useFridgeScan";
+import { useFridgeStore } from "@/store";
 import {
-  Alert,
+  ingredientsToListItems,
+  type FridgeListItem,
+} from "@/utils/fridge-display";
+import { Ionicons } from "@expo/vector-icons";
+import { useMemo, useState } from "react";
+import {
   Modal,
   Pressable,
   ScrollView,
@@ -19,31 +24,7 @@ const categories = [
   "Protéines",
   "Laitier",
   "Céréales",
-];
-
-interface InventoryItem {
-  name: string;
-  quantity: string;
-  expiresIn?: number;
-  emoji: string;
-  category: string;
-}
-
-const initialItems: InventoryItem[] = [
-  { name: "Poulet", quantity: "500g", expiresIn: 4, emoji: "🍗", category: "Protéines" },
-  { name: "Saumon frais", quantity: "200g", expiresIn: 1, emoji: "🐟", category: "Protéines" },
-  { name: "Œufs", quantity: "6 pièces", expiresIn: 8, emoji: "🥚", category: "Protéines" },
-  { name: "Avocat", quantity: "2 pièces", expiresIn: 1, emoji: "🥑", category: "Légumes" },
-  { name: "Tomates cerises", quantity: "250g", expiresIn: 0, emoji: "🍅", category: "Légumes" },
-  { name: "Brocoli", quantity: "1 tête", expiresIn: 3, emoji: "🥦", category: "Légumes" },
-  { name: "Carottes", quantity: "500g", expiresIn: 10, emoji: "🥕", category: "Légumes" },
-  { name: "Yaourt grec", quantity: "500g", expiresIn: 2, emoji: "🥛", category: "Laitier" },
-  { name: "Fromage râpé", quantity: "150g", expiresIn: 15, emoji: "🧀", category: "Laitier" },
-  { name: "Riz basmati", quantity: "1kg", expiresIn: 90, emoji: "🍚", category: "Céréales" },
-  { name: "Quinoa", quantity: "500g", expiresIn: 60, emoji: "🌾", category: "Céréales" },
-  { name: "Bananes", quantity: "3 pièces", expiresIn: 3, emoji: "🍌", category: "Fruits" },
-  { name: "Myrtilles", quantity: "125g", expiresIn: 2, emoji: "🫐", category: "Fruits" },
-  { name: "Mangue", quantity: "1 pièce", expiresIn: 2, emoji: "🥭", category: "Fruits" },
+  "Autre",
 ];
 
 function formatExpiry(expiresIn?: number) {
@@ -56,7 +37,7 @@ function InventoryItemRow({
   item,
   variant,
 }: {
-  item: InventoryItem;
+  item: FridgeListItem;
   variant: "expiring" | "stock";
 }) {
   const expiryLabel = formatExpiry(item.expiresIn);
@@ -107,8 +88,14 @@ function InventoryItemRow({
 export default function FrigoScreen() {
   const [activeCategory, setActiveCategory] = useState("Tout");
   const [search, setSearch] = useState("");
-  const [items] = useState<InventoryItem[]>(initialItems);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { ingredients } = useFridgeStore();
+  const { scanFridge, isScanning } = useFridgeScan();
+
+  const items = useMemo(
+    () => ingredientsToListItems(ingredients),
+    [ingredients],
+  );
 
   const filtered = items.filter((item) => {
     const matchCategory =
@@ -124,40 +111,25 @@ export default function FrigoScreen() {
     (i) => i.expiresIn === undefined || i.expiresIn > 2,
   );
 
-  const handleScanCamera = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        quality: 1,
-      });
-      if (!result.canceled && result.assets[0]) {
-        Alert.alert("Photo prise", "Image prête à être analysée");
-      }
-      setMenuOpen(false);
-    } catch (error) {
-      Alert.alert("Erreur", `Impossible d'accéder à la caméra: ${String(error)}`);
-    }
+  const handleScanCamera = () => {
+    scanFridge({
+      source: "camera",
+      navigateToFrigo: false,
+      onCloseMenu: () => setMenuOpen(false),
+    });
   };
 
-  const handlePickImage = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        quality: 1,
-      });
-      if (!result.canceled && result.assets[0]) {
-        Alert.alert("Image sélectionnée", "Image prête à être analysée");
-      }
-      setMenuOpen(false);
-    } catch (error) {
-      Alert.alert("Erreur", `Impossible d'accéder à la galerie: ${String(error)}`);
-    }
+  const handlePickImage = () => {
+    scanFridge({
+      source: "library",
+      navigateToFrigo: false,
+      onCloseMenu: () => setMenuOpen(false),
+    });
   };
 
   return (
     <View className="flex-1 bg-background">
+      <ScanningOverlay visible={isScanning} />
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 24 }}
@@ -170,13 +142,17 @@ export default function FrigoScreen() {
                 Mon Frigo 🧊
               </AppText>
               <AppText className="text-[15px] text-muted-foreground mt-1">
-                {items.length} ingrédients en stock
+                {items.length} ingrédient{items.length !== 1 ? "s" : ""} en stock
               </AppText>
             </View>
             <Pressable
               onPress={() => setMenuOpen(true)}
+              disabled={isScanning}
               className="w-11 h-11 rounded-full items-center justify-center active:opacity-80"
-              style={{ backgroundColor: colors.sage }}
+              style={{
+                backgroundColor: colors.sage,
+                opacity: isScanning ? 0.7 : 1,
+              }}
             >
               <Ionicons name="add" size={26} color="#fff" />
             </Pressable>
@@ -228,32 +204,67 @@ export default function FrigoScreen() {
             })}
           </ScrollView>
 
-          {expiringSoon.length > 0 && (
-            <View>
-              <AppText
-                className="text-[14px] font-bold mb-3"
-                style={{ color: colors.destructive }}
-              >
-                ⚠️ À consommer rapidement
+          {items.length === 0 ? (
+            <View className="items-center py-16 px-4">
+              <AppText className="text-4xl mb-3">📷</AppText>
+              <AppText className="text-[16px] font-semibold text-foreground text-center">
+                Ton frigo est vide
               </AppText>
-              {expiringSoon.map((item) => (
-                <InventoryItemRow
-                  key={item.name}
-                  item={item}
-                  variant="expiring"
-                />
-              ))}
+              <AppText className="text-[14px] text-muted-foreground text-center mt-2">
+                Appuie sur + ou « Scanne ton frigo » depuis l&apos;accueil pour
+                détecter tes ingrédients.
+              </AppText>
+              <Pressable
+                onPress={handleScanCamera}
+                disabled={isScanning}
+                className="mt-6 rounded-2xl px-6 py-3.5 active:opacity-90"
+                style={{ backgroundColor: colors.sage }}
+              >
+                <AppText className="text-[15px] font-semibold text-white">
+                  Ouvrir la caméra
+                </AppText>
+              </Pressable>
             </View>
-          )}
+          ) : (
+            <>
+              {expiringSoon.length > 0 && (
+                <View>
+                  <AppText
+                    className="text-[14px] font-bold mb-3"
+                    style={{ color: colors.destructive }}
+                  >
+                    ⚠️ À consommer rapidement
+                  </AppText>
+                  {expiringSoon.map((item) => (
+                    <InventoryItemRow
+                      key={item.id}
+                      item={item}
+                      variant="expiring"
+                    />
+                  ))}
+                </View>
+              )}
 
-          <View>
-            <AppText className="text-[15px] font-bold text-foreground mb-3">
-              En stock
-            </AppText>
-            {others.map((item) => (
-              <InventoryItemRow key={item.name} item={item} variant="stock" />
-            ))}
-          </View>
+              <View>
+                <AppText className="text-[15px] font-bold text-foreground mb-3">
+                  En stock
+                </AppText>
+                {others.length > 0 ? (
+                  others.map((item) => (
+                    <InventoryItemRow
+                      key={item.id}
+                      item={item}
+                      variant="stock"
+                    />
+                  ))
+                ) : (
+                  <AppText className="text-[14px] text-muted-foreground">
+                    Aucun autre ingrédient dans cette catégorie.
+                  </AppText>
+                )}
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
 

@@ -2,6 +2,7 @@ import { AppText } from "@/components/ui/app-text";
 import {
   ACTIVITY_LABELS,
   OBJECTIVE_LABELS,
+  SEX_LABELS,
 } from "@/constants/onboarding";
 import { colors } from "@/constants/colors";
 import { useProfileStore } from "@/store/profile-store";
@@ -30,7 +31,7 @@ export default function ProfileScreen() {
   const profileSections = [
     {
       title: "Informations personnelles",
-      subtitle: `${profile.age} ans · ${profile.weightKg} kg · ${profile.heightCm} cm`,
+      subtitle: `${SEX_LABELS[profile.sex]} · ${profile.age} ans · ${profile.weightKg} kg · ${profile.heightCm} cm`,
       icon: "person-outline" as const,
       iconColor: colors.sage,
       iconBg: colors.sageMuted,
@@ -93,7 +94,8 @@ export default function ProfileScreen() {
               {profile.firstName || "Mon profil"}
             </AppText>
             <AppText className="text-[14px] text-muted-foreground mt-0.5">
-              {profile.age} ans · {profile.weightKg} kg · {profile.heightCm} cm
+              {SEX_LABELS[profile.sex]} · {profile.age} ans · {profile.weightKg} kg ·{" "}
+              {profile.heightCm} cm
             </AppText>
           </View>
           <Ionicons name="chevron-forward" size={18} color={colors.mutedText} />

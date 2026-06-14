@@ -1,6 +1,6 @@
-// Base URL for the FastAPI backend.
-// Set your local IP or production URL here.
-const BASE_URL = "http://192.168.1.100:8000"; // TODO: move to env config
+import { API_BASE_URL } from "@/constants/api";
+
+const BASE_URL = API_BASE_URL;
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";

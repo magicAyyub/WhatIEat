@@ -1,4 +1,4 @@
-import type { ActivityLevel, SportsObjective } from "@/types/profile";
+import type { ActivityLevel, BiologicalSex, SportsObjective } from "@/types/profile";
 
 export const ONBOARDING_STEPS = 5;
 
@@ -62,4 +62,18 @@ export const ACTIVITY_LABELS: Record<ActivityLevel, string> = {
   light: "Légère · 1-2x/semaine",
   moderate: "Modérée · 3-4x/semaine",
   intense: "Intense · 5x+/semaine",
+};
+
+export const SEX_OPTIONS: {
+  id: BiologicalSex;
+  emoji: string;
+  title: string;
+}[] = [
+  { id: "male", emoji: "👨", title: "Homme" },
+  { id: "female", emoji: "👩", title: "Femme" },
+];
+
+export const SEX_LABELS: Record<BiologicalSex, string> = {
+  male: "Homme",
+  female: "Femme",
 };
