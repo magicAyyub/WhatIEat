@@ -8,7 +8,6 @@ import { useProfileStore } from "@/store/profile-store";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
-
 const macroSegments = [
   { label: "Protéines", grams: "140g", percent: "27%", color: colors.macroProtein, flex: 0.27 },
   { label: "Glucides", grams: "230g", percent: "44%", color: colors.macroCarbs, flex: 0.44 },
