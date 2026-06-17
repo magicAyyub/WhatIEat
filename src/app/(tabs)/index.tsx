@@ -18,9 +18,9 @@ const DEFAULT_CALORIE_TARGET = 2100;
 
 const getGreeting = () => {
   const hour = new Date().getHours();
-  if (hour < 12) return "Bonjour";
-  if (hour < 18) return "Bon après-midi";
-  return "Bonsoir";
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
 };
 
 export default function HomeScreen() {
@@ -69,7 +69,7 @@ export default function HomeScreen() {
                 </AppText>
               </View>
               <AppText className="text-[26px] font-bold text-foreground leading-tight">
-                Mon suivi nutrition
+                My nutrition tracker
               </AppText>
             </View>
             <View
@@ -94,10 +94,10 @@ export default function HomeScreen() {
             <View className="flex-row justify-between items-start mb-1">
               <View>
                 <AppText className="text-[14px] font-medium text-muted-foreground">
-                  Aujourd&apos;hui
+                  Today
                 </AppText>
                 <AppText className="text-[15px] font-semibold text-foreground mt-1">
-                  {caloriesRemaining} kcal restantes
+                  {caloriesRemaining} kcal remaining
                 </AppText>
               </View>
               <View className="items-end">
@@ -131,19 +131,19 @@ export default function HomeScreen() {
                 value={68}
                 max={140}
                 color={colors.macroProtein}
-                label="Protéines"
+                label="Protein"
               />
               <MacroRing
                 value={120}
                 max={260}
                 color={colors.macroCarbs}
-                label="Glucides"
+                label="Carbs"
               />
               <MacroRing
                 value={42}
                 max={70}
                 color={colors.macroFat}
-                label="Lipides"
+                label="Fat"
               />
             </View>
           </View>
@@ -169,15 +169,15 @@ export default function HomeScreen() {
                 <View className="flex-row items-center mb-1">
                   <View className="bg-white/20 rounded-full px-2 py-0.5">
                     <AppText className="text-[10px] font-bold text-white uppercase tracking-wider">
-                      Détection IA
+                      AI Detection
                     </AppText>
                   </View>
                 </View>
                 <AppText className="text-[17px] font-bold text-white leading-tight">
-                  Scanne ton frigo
+                  Scan your fridge
                 </AppText>
                 <AppText className="text-[13px] text-white/80 mt-1 leading-snug">
-                  Prends une photo pour identifier et ajouter tes ingrédients en 1 clic
+                  Take a photo to identify and add your ingredients in one tap
                 </AppText>
               </View>
               <View className="w-8 h-8 rounded-full items-center justify-center bg-white/10">
@@ -192,7 +192,7 @@ export default function HomeScreen() {
                 <View className="flex-row items-center gap-1.5">
                   <Ionicons name="flash" size={16} color={colors.macroCarbs} />
                   <AppText className="text-[15px] font-bold text-foreground">
-                    À consommer vite
+                    Use soon
                   </AppText>
                 </View>
                 <Pressable onPress={() => router.push("/(tabs)/frigo")}>
@@ -200,7 +200,7 @@ export default function HomeScreen() {
                     className="text-[13px] font-semibold"
                     style={{ color: colors.sage }}
                   >
-                    Voir le frigo →
+                    View fridge →
                   </AppText>
                 </Pressable>
               </View>
@@ -220,7 +220,7 @@ export default function HomeScreen() {
             <View className="flex-row items-center gap-1.5 mb-3">
               <Ionicons name="sparkles" size={16} color={colors.macroCarbs} />
               <AppText className="text-[15px] font-bold text-foreground">
-                Suggestions pour vous
+                Suggestions for you
               </AppText>
             </View>
             <RecipeCardLarge recipe={featuredHomeRecipe} />

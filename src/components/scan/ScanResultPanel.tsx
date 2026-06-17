@@ -35,13 +35,13 @@ export function ScanResultPanel({
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="mb-4 flex-row items-center justify-between">
           <AppText className="text-[20px] font-bold text-foreground">
-            Résultats du scan
+            Scan results
           </AppText>
           <View
             className="rounded-full px-3 py-1 bg-zinc-50 border border-zinc-100"
           >
             <AppText className="text-[13px] font-semibold text-muted-foreground">
-              Confiance {confidenceText}
+              Confidence {confidenceText}
             </AppText>
           </View>
         </View>
@@ -50,7 +50,7 @@ export function ScanResultPanel({
           <View className="mb-4 flex-row items-center gap-3 rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-4">
             <ActivityIndicator color={colors.sage} />
             <AppText className="text-[15px] font-medium text-muted-foreground">
-              Analyse de l&apos;image en cours...
+              Analyzing image...
             </AppText>
           </View>
         ) : null}
@@ -66,7 +66,7 @@ export function ScanResultPanel({
         {!loading && !error && !hasIngredients ? (
           <View className="mb-4 rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-4">
             <AppText className="text-[15px] font-medium text-muted-foreground">
-              Aucun ingrédient détecté.
+              No ingredients detected.
             </AppText>
           </View>
         ) : null}
@@ -74,7 +74,7 @@ export function ScanResultPanel({
         {!loading && hasIngredients ? (
           <View className="mb-4">
             <AppText className="mb-2.5 text-[14px] font-bold text-muted-foreground">
-              Ingrédients détectés ({ingredients.length})
+              Detected ingredients ({ingredients.length})
             </AppText>
             {ingredients.map((item) => (
               <View
@@ -95,7 +95,7 @@ export function ScanResultPanel({
                   </AppText>
                 </View>
                 <AppText className="text-[14px] font-semibold text-muted-foreground">
-                  {item.quantity ? item.quantity : "détecté"}
+                  {item.quantity ? item.quantity : "detected"}
                 </AppText>
               </View>
             ))}
@@ -110,7 +110,7 @@ export function ScanResultPanel({
               onPress={onAddIngredients}
             >
               <AppText className="text-[16px] font-bold text-white">
-                Ajouter au frigo
+                Add to fridge
               </AppText>
             </Pressable>
           )}
@@ -138,7 +138,7 @@ export function ScanResultPanel({
                   : { color: colors.white }
               }
             >
-              {!loading && hasIngredients ? "Prendre une autre photo" : "Scanner une photo"}
+              {!loading && hasIngredients ? "Take another photo" : "Scan a photo"}
             </AppText>
           </Pressable>
         </View>

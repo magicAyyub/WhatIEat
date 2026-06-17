@@ -9,9 +9,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
 const macroSegments = [
-  { label: "Protéines", grams: "140g", percent: "27%", color: colors.macroProtein, flex: 0.27 },
-  { label: "Glucides", grams: "230g", percent: "44%", color: colors.macroCarbs, flex: 0.44 },
-  { label: "Lipides", grams: "70g", percent: "29%", color: colors.macroFat, flex: 0.29 },
+  { label: "Protein", grams: "140g", percent: "27%", color: colors.macroProtein, flex: 0.27 },
+  { label: "Carbs", grams: "230g", percent: "44%", color: colors.macroCarbs, flex: 0.44 },
+  { label: "Fat", grams: "70g", percent: "29%", color: colors.macroFat, flex: 0.29 },
 ];
 
 export default function ProfileScreen() {
@@ -24,20 +24,20 @@ export default function ProfileScreen() {
   const allergiesSubtitle =
     profile.dietaryRestrictions.length > 0
       ? profile.dietaryRestrictions.join(" · ")
-      : "Aucune allergie renseignée";
+      : "No allergies listed";
 
   const profileSections = [
     {
-      title: "Informations personnelles",
-      subtitle: `${profile.age} ans · ${profile.weightKg} kg · ${profile.heightCm} cm`,
+      title: "Personal information",
+      subtitle: `${profile.age} yrs · ${profile.weightKg} kg · ${profile.heightCm} cm`,
       icon: "person-outline" as const,
       iconColor: colors.sage,
       iconBg: colors.sageMuted,
       step: 0,
     },
     {
-      title: "Objectifs",
-      subtitle: `${OBJECTIVE_LABELS[profile.sportsObjective]} · ${profile.calorieTarget} kcal/jour`,
+      title: "Goals",
+      subtitle: `${OBJECTIVE_LABELS[profile.sportsObjective]} · ${profile.calorieTarget} kcal/day`,
       icon: "flag-outline" as const,
       iconColor: colors.sage,
       iconBg: colors.sageMuted,
@@ -52,7 +52,7 @@ export default function ProfileScreen() {
       step: 2,
     },
     {
-      title: "Activité physique",
+      title: "Physical activity",
       subtitle: ACTIVITY_LABELS[profile.activityLevel],
       icon: "barbell-outline" as const,
       iconColor: colors.macroCarbs,
@@ -89,10 +89,10 @@ export default function ProfileScreen() {
           </View>
           <View className="flex-1">
             <AppText className="text-[22px] font-bold text-foreground">
-              {profile.firstName || "Mon profil"}
+              {profile.firstName || "My profile"}
             </AppText>
             <AppText className="text-[14px] text-muted-foreground mt-0.5">
-              {profile.age} ans · {profile.weightKg} kg · {profile.heightCm} cm
+              {profile.age} yrs · {profile.weightKg} kg · {profile.heightCm} cm
             </AppText>
           </View>
           <Ionicons name="chevron-forward" size={18} color={colors.mutedText} />
@@ -143,7 +143,7 @@ export default function ProfileScreen() {
 
         <View>
           <AppText className="text-[15px] font-bold text-foreground mb-3">
-            Répartition cible des macros
+            Target macro split
           </AppText>
           <View
             className="rounded-2xl border p-4"

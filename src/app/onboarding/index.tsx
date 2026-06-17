@@ -28,11 +28,11 @@ import {
 
 const CONTENT_STEPS = 4;
 const STEP_TITLES = [
-  "Profil",
-  "Objectif",
+  "Profile",
+  "Goal",
   "Allergies",
-  "Activité",
-  "C'est parti",
+  "Activity",
+  "You're all set",
 ] as const;
 const STEP_ICONS = [
   "person-outline",
@@ -214,10 +214,10 @@ export default function OnboardingScreen() {
   };
 
   const continueLabel = () => {
-    if (isEdit) return "Enregistrer";
-    if (step === CONTENT_STEPS) return "C'est parti !";
-    if (step === CONTENT_STEPS - 1) return "Continuer";
-    return "Continuer";
+    if (isEdit) return "Save";
+    if (step === CONTENT_STEPS) return "Let's go!";
+    if (step === CONTENT_STEPS - 1) return "Continue";
+    return "Continue";
   };
 
   const renderStep = () => {
@@ -234,10 +234,10 @@ export default function OnboardingScreen() {
               contentContainerStyle={{ paddingBottom: 16 }}
             >
               <AppText className="text-[15px] text-muted-foreground mb-6">
-                Faisons connaissance pour personnaliser ton suivi.
+                Let&apos;s get to know you to personalize your tracking.
               </AppText>
               <FormField
-                label="Prénom"
+                label="First name"
                 value={firstName}
                 onChangeText={setFirstName}
                 placeholder="Alex"
@@ -245,7 +245,7 @@ export default function OnboardingScreen() {
               />
               <View className="flex-row gap-3 mb-4">
                 <FormField
-                  label="Poids (kg)"
+                  label="Weight (kg)"
                   value={weight}
                   onChangeText={setWeight}
                   placeholder="75"
@@ -253,7 +253,7 @@ export default function OnboardingScreen() {
                   className="flex-1"
                 />
                 <FormField
-                  label="Taille (cm)"
+                  label="Height (cm)"
                   value={height}
                   onChangeText={setHeight}
                   placeholder="178"
@@ -262,7 +262,7 @@ export default function OnboardingScreen() {
                 />
               </View>
               <FormField
-                label="Âge"
+                label="Age"
                 value={age}
                 onChangeText={setAge}
                 placeholder="25"
@@ -276,7 +276,7 @@ export default function OnboardingScreen() {
         return (
           <ScrollView showsVerticalScrollIndicator={false}>
             <AppText className="text-[15px] text-muted-foreground mb-4">
-              Quel est ton objectif principal ?
+              What is your main goal?
             </AppText>
             {GOAL_OPTIONS.map((option) => (
               <SelectCard
@@ -295,7 +295,7 @@ export default function OnboardingScreen() {
         return (
           <ScrollView showsVerticalScrollIndicator={false}>
             <AppText className="text-[15px] text-muted-foreground mb-4">
-              Sélectionne tes allergies et intolérances (optionnel).
+              Select your allergies and intolerances (optional).
             </AppText>
             <View className="flex-row flex-wrap gap-2 mb-4">
               {ALLERGY_OPTIONS.map((name) => {
@@ -325,7 +325,7 @@ export default function OnboardingScreen() {
               <TextInput
                 value={customAllergy}
                 onChangeText={setCustomAllergy}
-                placeholder="Autre allergie..."
+                placeholder="Other allergy..."
                 className="flex-1 rounded-xl border px-4 py-3.5 text-[15px]"
                 style={{
                   backgroundColor: colors.white,
@@ -352,7 +352,7 @@ export default function OnboardingScreen() {
         return (
           <ScrollView showsVerticalScrollIndicator={false}>
             <AppText className="text-[15px] text-muted-foreground mb-4">
-              Quel est ton niveau d&apos;activité physique ?
+              What is your activity level?
             </AppText>
             {ACTIVITY_OPTIONS.map((option) => (
               <SelectCard
@@ -371,8 +371,8 @@ export default function OnboardingScreen() {
           <ScrollView showsVerticalScrollIndicator={false}>
             <AppText className="text-[15px] text-muted-foreground mb-6">
               {draftProfile.firstName
-                ? `Parfait ${draftProfile.firstName}, voici ton profil personnalisé :`
-                : "Voici ton profil personnalisé :"}
+                ? `Perfect ${draftProfile.firstName}, here is your personalized profile:`
+                : "Here is your personalized profile:"}
             </AppText>
             <View
               className="rounded-2xl border p-4 gap-3"
@@ -382,16 +382,16 @@ export default function OnboardingScreen() {
               }}
             >
               <SummaryRow
-                label="Objectif"
+                label="Goal"
                 value={OBJECTIVE_LABELS[draftProfile.sportsObjective]}
               />
               <SummaryRow
-                label="Calories / jour"
+                label="Calories / day"
                 value={`${draftProfile.calorieTarget} kcal`}
                 highlight
               />
               <SummaryRow
-                label="Activité"
+                label="Activity"
                 value={ACTIVITY_LABELS[draftProfile.activityLevel]}
               />
               <SummaryRow
@@ -399,7 +399,7 @@ export default function OnboardingScreen() {
                 value={
                   draftProfile.dietaryRestrictions.length > 0
                     ? draftProfile.dietaryRestrictions.join(", ")
-                    : "Aucune"
+                    : "None"
                 }
               />
             </View>
@@ -429,7 +429,7 @@ export default function OnboardingScreen() {
           {step === 2 && !isEdit && (
             <Pressable onPress={skipAllergies} className="items-center py-1">
               <AppText className="text-[14px] text-muted-foreground">
-                Passer cette étape
+                Skip this step
               </AppText>
             </Pressable>
           )}

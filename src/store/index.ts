@@ -13,20 +13,20 @@ const getExpiryDate = (days: number): string => {
 };
 
 const initialIngredients: Ingredient[] = [
-  { id: "poulet",    name: "chicken",         quantity: "500g",     expiresAt: getExpiryDate(4),  icon: "food-drumstick", category: "Protéines" },
-{ id: "saumon",    name: "fresh salmon",    quantity: "200g",     expiresAt: getExpiryDate(1),  icon: "fish",           category: "Protéines" },
-{ id: "oeuf",     name: "egg",             quantity: "6 pieces", expiresAt: getExpiryDate(8),  icon: "egg",            category: "Protéines" },
-{ id: "avocat",    name: "avocado",         quantity: "2 pieces", expiresAt: getExpiryDate(1),  icon: "food-variant",   category: "Légumes"   },
-{ id: "tomate",    name: "cherry tomatoes", quantity: "250g",     expiresAt: getExpiryDate(0),  icon: "fruit-cherries", category: "Légumes"   },
-{ id: "brocoli",   name: "broccoli",        quantity: "1 head",   expiresAt: getExpiryDate(3),  icon: "leaf",           category: "Légumes"   },
-{ id: "carotte",   name: "carrot",          quantity: "500g",     expiresAt: getExpiryDate(10), icon: "carrot",         category: "Légumes"   },
-{ id: "yaourt",    name: "greek yogurt",    quantity: "500g",     expiresAt: getExpiryDate(2),  icon: "cup",            category: "Laitier"   },
-{ id: "fromage",   name: "shredded cheese", quantity: "150g",     expiresAt: getExpiryDate(15), icon: "cheese",         category: "Laitier"   },
-{ id: "riz",       name: "basmati rice",    quantity: "1kg",      expiresAt: getExpiryDate(90), icon: "rice",           category: "Céréales"  },
-{ id: "quinoa",    name: "quinoa",          quantity: "500g",     expiresAt: getExpiryDate(60), icon: "barley",         category: "Céréales"  },
-{ id: "bananes",   name: "banana",          quantity: "3 pieces", expiresAt: getExpiryDate(3),  icon: "food-variant",   category: "Fruits"    },
-{ id: "myrtilles", name: "blueberry",       quantity: "125g",     expiresAt: getExpiryDate(2),  icon: "fruit-grapes",   category: "Fruits"    },
-{ id: "mangue",    name: "mango",           quantity: "1 piece",  expiresAt: getExpiryDate(2),  icon: "fruit-citrus",   category: "Fruits"    },
+  { id: "poulet",    name: "chicken",         quantity: "500g",     expiresAt: getExpiryDate(4),  icon: "food-drumstick", category: "Protein" },
+  { id: "saumon",    name: "fresh salmon",    quantity: "200g",     expiresAt: getExpiryDate(1),  icon: "fish",           category: "Protein" },
+  { id: "oeuf",      name: "egg",             quantity: "6 pieces", expiresAt: getExpiryDate(8),  icon: "egg",            category: "Protein" },
+  { id: "avocat",    name: "avocado",         quantity: "2 pieces", expiresAt: getExpiryDate(1),  icon: "food-variant",   category: "Vegetables" },
+  { id: "tomate",    name: "cherry tomatoes", quantity: "250g",     expiresAt: getExpiryDate(0),  icon: "fruit-cherries", category: "Vegetables" },
+  { id: "brocoli",   name: "broccoli",        quantity: "1 head",   expiresAt: getExpiryDate(3),  icon: "leaf",           category: "Vegetables" },
+  { id: "carotte",   name: "carrot",          quantity: "500g",     expiresAt: getExpiryDate(10), icon: "carrot",         category: "Vegetables" },
+  { id: "yaourt",    name: "greek yogurt",    quantity: "500g",     expiresAt: getExpiryDate(2),  icon: "cup",            category: "Dairy" },
+  { id: "fromage",   name: "shredded cheese", quantity: "150g",     expiresAt: getExpiryDate(15), icon: "cheese",         category: "Dairy" },
+  { id: "riz",       name: "basmati rice",    quantity: "1kg",      expiresAt: getExpiryDate(90), icon: "rice",           category: "Grains" },
+  { id: "quinoa",    name: "quinoa",          quantity: "500g",     expiresAt: getExpiryDate(60), icon: "barley",         category: "Grains" },
+  { id: "bananes",   name: "banana",          quantity: "3 pieces", expiresAt: getExpiryDate(3),  icon: "food-variant",   category: "Fruits" },
+  { id: "myrtilles", name: "blueberry",       quantity: "125g",     expiresAt: getExpiryDate(2),  icon: "fruit-grapes",   category: "Fruits" },
+  { id: "mangue",    name: "mango",           quantity: "1 piece",  expiresAt: getExpiryDate(2),  icon: "fruit-citrus",   category: "Fruits" },
 ];
 
 type FridgeStore = {

@@ -58,39 +58,39 @@ export function scalePolygon(points: [number, number][]) {
 
 export const INGREDIENT_MAP: Record<
   string,
-  { nameFr: string; icon: string; category: string; defaultExpiryDays: number }
+  { displayName: string; icon: string; category: string; defaultExpiryDays: number }
 > = {
-  apple: { nameFr: "Pommes", icon: "food-apple", category: "Fruits", defaultExpiryDays: 7 },
-  banana: { nameFr: "Bananes", icon: "food-variant", category: "Fruits", defaultExpiryDays: 3 },
-  cabbage: { nameFr: "Chou", icon: "leaf", category: "Légumes", defaultExpiryDays: 7 },
-  carrot: { nameFr: "Carottes", icon: "carrot", category: "Légumes", defaultExpiryDays: 10 },
-  cucumber: { nameFr: "Concombre", icon: "food-variant", category: "Légumes", defaultExpiryDays: 5 },
-  date: { nameFr: "Dattes", icon: "food-variant", category: "Fruits", defaultExpiryDays: 30 },
-  eggplant: { nameFr: "Aubergine", icon: "food-variant", category: "Légumes", defaultExpiryDays: 5 },
-  eggs: { nameFr: "Œufs", icon: "egg", category: "Protéines", defaultExpiryDays: 14 },
-  garlic: { nameFr: "Ail", icon: "garlic", category: "Légumes", defaultExpiryDays: 30 },
-  lemon: { nameFr: "Citron", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 14 },
-  lettuce: { nameFr: "Salade", icon: "leaf", category: "Légumes", defaultExpiryDays: 4 },
-  okra: { nameFr: "Gombo", icon: "food-variant", category: "Légumes", defaultExpiryDays: 5 },
-  onion: { nameFr: "Oignon", icon: "onion", category: "Légumes", defaultExpiryDays: 30 },
-  orange: { nameFr: "Orange", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 10 },
-  potato: { nameFr: "Pommes de terre", icon: "potato", category: "Légumes", defaultExpiryDays: 30 },
-  tomato: { nameFr: "Tomates", icon: "fruit-cherries", category: "Légumes", defaultExpiryDays: 4 },
-  butter: { nameFr: "Beurre", icon: "butter", category: "Laitier", defaultExpiryDays: 21 },
-  cheese: { nameFr: "Fromage", icon: "cheese", category: "Laitier", defaultExpiryDays: 14 },
-  milk: { nameFr: "Lait", icon: "glass-milk", category: "Laitier", defaultExpiryDays: 7 },
-  yogurt: { nameFr: "Yaourt grec", icon: "cup", category: "Laitier", defaultExpiryDays: 10 },
-  bread: { nameFr: "Pain", icon: "bread-slice", category: "Céréales", defaultExpiryDays: 3 },
-  beans: { nameFr: "Haricots", icon: "sprout", category: "Légumes", defaultExpiryDays: 5 },
-  beef: { nameFr: "Bœuf", icon: "food-steak", category: "Protéines", defaultExpiryDays: 3 },
-  bulgur: { nameFr: "Boulghour", icon: "barley", category: "Céréales", defaultExpiryDays: 90 },
-  chicken: { nameFr: "Poulet", icon: "food-drumstick", category: "Protéines", defaultExpiryDays: 3 },
-  chickpea: { nameFr: "Pois chiches", icon: "sprout", category: "Légumes", defaultExpiryDays: 5 },
-  fish: { nameFr: "Poisson", icon: "fish", category: "Protéines", defaultExpiryDays: 2 },
-  lamb: { nameFr: "Agneau", icon: "food-steak", category: "Protéines", defaultExpiryDays: 3 },
-  lentil: { nameFr: "Lentilles", icon: "barley", category: "Céréales", defaultExpiryDays: 90 },
-  rice: { nameFr: "Riz basmati", icon: "rice", category: "Céréales", defaultExpiryDays: 90 },
-  spinach: { nameFr: "Épinards", icon: "leaf", category: "Légumes", defaultExpiryDays: 3 },
+  apple: { displayName: "Apples", icon: "food-apple", category: "Fruits", defaultExpiryDays: 7 },
+  banana: { displayName: "Bananas", icon: "food-variant", category: "Fruits", defaultExpiryDays: 3 },
+  cabbage: { displayName: "Cabbage", icon: "leaf", category: "Vegetables", defaultExpiryDays: 7 },
+  carrot: { displayName: "Carrots", icon: "carrot", category: "Vegetables", defaultExpiryDays: 10 },
+  cucumber: { displayName: "Cucumber", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
+  date: { displayName: "Dates", icon: "food-variant", category: "Fruits", defaultExpiryDays: 30 },
+  eggplant: { displayName: "Eggplant", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
+  eggs: { displayName: "Eggs", icon: "egg", category: "Protein", defaultExpiryDays: 14 },
+  garlic: { displayName: "Garlic", icon: "garlic", category: "Vegetables", defaultExpiryDays: 30 },
+  lemon: { displayName: "Lemon", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 14 },
+  lettuce: { displayName: "Lettuce", icon: "leaf", category: "Vegetables", defaultExpiryDays: 4 },
+  okra: { displayName: "Okra", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
+  onion: { displayName: "Onion", icon: "onion", category: "Vegetables", defaultExpiryDays: 30 },
+  orange: { displayName: "Orange", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 10 },
+  potato: { displayName: "Potatoes", icon: "potato", category: "Vegetables", defaultExpiryDays: 30 },
+  tomato: { displayName: "Tomatoes", icon: "fruit-cherries", category: "Vegetables", defaultExpiryDays: 4 },
+  butter: { displayName: "Butter", icon: "butter", category: "Dairy", defaultExpiryDays: 21 },
+  cheese: { displayName: "Cheese", icon: "cheese", category: "Dairy", defaultExpiryDays: 14 },
+  milk: { displayName: "Milk", icon: "glass-milk", category: "Dairy", defaultExpiryDays: 7 },
+  yogurt: { displayName: "Greek yogurt", icon: "cup", category: "Dairy", defaultExpiryDays: 10 },
+  bread: { displayName: "Bread", icon: "bread-slice", category: "Grains", defaultExpiryDays: 3 },
+  beans: { displayName: "Beans", icon: "sprout", category: "Vegetables", defaultExpiryDays: 5 },
+  beef: { displayName: "Beef", icon: "food-steak", category: "Protein", defaultExpiryDays: 3 },
+  bulgur: { displayName: "Bulgur", icon: "barley", category: "Grains", defaultExpiryDays: 90 },
+  chicken: { displayName: "Chicken", icon: "food-drumstick", category: "Protein", defaultExpiryDays: 3 },
+  chickpea: { displayName: "Chickpeas", icon: "sprout", category: "Vegetables", defaultExpiryDays: 5 },
+  fish: { displayName: "Fish", icon: "fish", category: "Protein", defaultExpiryDays: 2 },
+  lamb: { displayName: "Lamb", icon: "food-steak", category: "Protein", defaultExpiryDays: 3 },
+  lentil: { displayName: "Lentils", icon: "barley", category: "Grains", defaultExpiryDays: 90 },
+  rice: { displayName: "Basmati rice", icon: "rice", category: "Grains", defaultExpiryDays: 90 },
+  spinach: { displayName: "Spinach", icon: "leaf", category: "Vegetables", defaultExpiryDays: 3 },
 };
 
 export function getExpiryDateString(days: number): string {
@@ -107,9 +107,9 @@ export function mapScanToIngredient(raw: {
 }): Ingredient {
   const meta = INGREDIENT_MAP[raw.id.toLowerCase()];
   
-  const name = meta ? meta.nameFr : raw.name;
+  const name = meta ? meta.displayName : raw.name;
   const icon = meta ? meta.icon : "food-variant";
-  const category = meta ? meta.category : "Autre";
+  const category = meta ? meta.category : "Other";
   const defaultExpiryDays = meta ? meta.defaultExpiryDays : 7;
   const expiresAt = getExpiryDateString(defaultExpiryDays);
 
@@ -118,12 +118,12 @@ export function mapScanToIngredient(raw: {
   if (raw.unit === "count" || raw.unit === "pack") {
     const count = parseInt(displayQuantity, 10);
     if (!isNaN(count)) {
-      displayQuantity = `${count} pièce${count > 1 ? "s" : ""}`;
+      displayQuantity = `${count} piece${count > 1 ? "s" : ""}`;
     }
   } else if (raw.unit === "level") {
-    if (displayQuantity === "low") displayQuantity = "Faible";
-    else if (displayQuantity === "medium") displayQuantity = "Moyen";
-    else if (displayQuantity === "high") displayQuantity = "Élevé";
+    if (displayQuantity === "low") displayQuantity = "Low";
+    else if (displayQuantity === "medium") displayQuantity = "Medium";
+    else if (displayQuantity === "high") displayQuantity = "High";
   }
 
   return {

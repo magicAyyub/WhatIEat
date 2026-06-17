@@ -5,13 +5,13 @@ export const ONBOARDING_STEPS = 5;
 export const ALLERGY_OPTIONS = [
   "Gluten",
   "Lactose",
-  "Arachides",
-  "Fruits à coque",
-  "Œufs",
-  "Soja",
-  "Poisson",
-  "Crustacés",
-  "Sésame",
+  "Peanuts",
+  "Tree nuts",
+  "Eggs",
+  "Soy",
+  "Fish",
+  "Shellfish",
+  "Sesame",
 ] as const;
 
 export const GOAL_OPTIONS: {
@@ -23,20 +23,20 @@ export const GOAL_OPTIONS: {
   {
     id: "weight-loss",
     emoji: "🔥",
-    title: "Perte de poids",
-    subtitle: "Réduire la masse grasse en douceur",
+    title: "Weight loss",
+    subtitle: "Reduce body fat gradually",
   },
   {
     id: "muscle-gain",
     emoji: "💪",
-    title: "Prise de muscle",
-    subtitle: "Construire du muscle avec un surplus calorique",
+    title: "Muscle gain",
+    subtitle: "Build muscle with a calorie surplus",
   },
   {
     id: "maintenance",
     emoji: "⚖️",
-    title: "Maintien",
-    subtitle: "Garder ton poids et ton équilibre actuel",
+    title: "Maintenance",
+    subtitle: "Keep your current weight and balance",
   },
 ];
 
@@ -45,21 +45,21 @@ export const ACTIVITY_OPTIONS: {
   emoji: string;
   title: string;
 }[] = [
-  { id: "sedentary", emoji: "🪑", title: "Sédentaire" },
-  { id: "light", emoji: "🚶", title: "Légère (1-2x/sem)" },
-  { id: "moderate", emoji: "🏃", title: "Modérée (3-4x/sem)" },
-  { id: "intense", emoji: "🏋️", title: "Intense (5x+/sem)" },
+  { id: "sedentary", emoji: "🪑", title: "Sedentary" },
+  { id: "light", emoji: "🚶", title: "Light (1-2x/week)" },
+  { id: "moderate", emoji: "🏃", title: "Moderate (3-4x/week)" },
+  { id: "intense", emoji: "🏋️", title: "Intense (5x+/week)" },
 ];
 
 export const OBJECTIVE_LABELS: Record<SportsObjective, string> = {
-  "weight-loss": "Perte de poids",
-  "muscle-gain": "Prise de muscle",
-  maintenance: "Maintien",
+  "weight-loss": "Weight loss",
+  "muscle-gain": "Muscle gain",
+  maintenance: "Maintenance",
 };
 
 export const ACTIVITY_LABELS: Record<ActivityLevel, string> = {
-  sedentary: "Sédentaire",
-  light: "Légère · 1-2x/semaine",
-  moderate: "Modérée · 3-4x/semaine",
-  intense: "Intense · 5x+/semaine",
+  sedentary: "Sedentary",
+  light: "Light · 1-2x/week",
+  moderate: "Moderate · 3-4x/week",
+  intense: "Intense · 5x+/week",
 };

@@ -12,7 +12,7 @@ type ContinueButtonProps = {
 export function ContinueButton({
   onPress,
   disabled = false,
-  label = "Continuer",
+  label = "Continue",
 }: ContinueButtonProps) {
   return (
     <Pressable

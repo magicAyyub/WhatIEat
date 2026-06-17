@@ -27,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Accueil",
+          title: "Home",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon name="home-outline" focused={focused} />
           ),
@@ -36,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="frigo"
         options={{
-          title: "Frigo",
+          title: "Fridge",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon name="cube-outline" focused={focused} />
           ),
@@ -45,7 +45,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="recipes"
         options={{
-          title: "Recettes",
+          title: "Recipes",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon name="restaurant-outline" focused={focused} />
           ),
@@ -54,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profil",
+          title: "Profile",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon name="person-outline" focused={focused} />
           ),

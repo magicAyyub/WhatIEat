@@ -17,17 +17,17 @@ import { APP_CONFIG } from "@/config/runtime";
 // ── Config API ─────────────────────────────────────────────────────────────
 const API_BASE = BASE_URL;
 const MEAL_LABELS: Record<string, string> = {
-  breakfast: "Petit-déjeuner",
-  lunch:     "Déjeuner",
-  dinner:    "Dîner",
+  breakfast: "Breakfast",
+  lunch:     "Lunch",
+  dinner:    "Dinner",
   snack:     "Snack",
 };
 
 const CALORIE_FIT_CONFIG: Record<string, { label: string; color: string }> = {
-  perfect: { label: "✓ Calories adaptées", color: colors.sage },
-  low:     { label: "↓ Peu calorique",     color: colors.macroCarbs },
-  high:    { label: "↑ Riche en calories", color: colors.destructive },
-  unknown: { label: "",                    color: colors.mutedText },
+  perfect: { label: "✓ Calories on target", color: colors.sage },
+  low:     { label: "↓ Low calorie",        color: colors.macroCarbs },
+  high:    { label: "↑ High calorie",       color: colors.destructive },
+  unknown: { label: "",                     color: colors.mutedText },
 };
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -132,7 +132,7 @@ function RecipeCard({
         <View className="gap-1">
           <View className="flex-row justify-between">
             <AppText className="text-[12px] text-muted-foreground">
-              {recipe.matched_ingredients.length}/{recipe.all_ingredients.length} ingrédients disponibles
+              {recipe.matched_ingredients.length}/{recipe.all_ingredients.length} ingredients available
             </AppText>
             <AppText className="text-[12px] font-semibold" style={{ color: colors.sage }}>
               {matchPct}%
@@ -163,9 +163,9 @@ function RecipeCard({
               style={{ borderColor: colors.border }}
             >
               {[
-                { label: "Protéines", value: recipe.nutrition.protein_g, color: colors.macroProtein, unit: "g" },
-                { label: "Glucides",  value: recipe.nutrition.carbs_g,   color: colors.macroCarbs,   unit: "g" },
-                { label: "Lipides",   value: recipe.nutrition.total_fat_g, color: colors.macroFat,   unit: "g" },
+                { label: "Protein", value: recipe.nutrition.protein_g, color: colors.macroProtein, unit: "g" },
+                { label: "Carbs",   value: recipe.nutrition.carbs_g,   color: colors.macroCarbs,   unit: "g" },
+                { label: "Fat",     value: recipe.nutrition.total_fat_g, color: colors.macroFat,   unit: "g" },
               ].map((macro, i) => (
                 <View
                   key={macro.label}
@@ -193,7 +193,7 @@ function RecipeCard({
           {recipe.missing_ingredients.length > 0 && (
             <View>
               <AppText className="text-[13px] font-semibold text-foreground mb-2">
-                Ingrédients manquants
+                Missing ingredients
               </AppText>
               <View className="flex-row flex-wrap gap-1.5">
                 {recipe.missing_ingredients.map((ing, i) => (
@@ -220,7 +220,7 @@ function RecipeCard({
           {/* Étapes */}
           <View>
             <AppText className="text-[13px] font-semibold text-foreground mb-2">
-              Préparation
+              Preparation
             </AppText>
             {recipe.steps.map((s) => (
               <View key={s.step} className="flex-row gap-3 mb-2.5">
@@ -251,14 +251,14 @@ function RecipeCard({
             >
               <Ionicons name="alert-circle-outline" size={16} color={colors.mutedText} />
               <AppText className="text-[13px] font-medium text-muted-foreground">
-                Ingrédients manquants
+                Missing ingredients
               </AppText>
             </Pressable>
             <Pressable
               className="w-12 h-12 rounded-xl items-center justify-center border active:opacity-70"
               style={{ borderColor: colors.border }}
               onPress={() =>
-                Alert.alert("Recette sauvegardée", `"${recipe.title}" ajoutée à tes favoris.`)
+                Alert.alert("Recipe saved", `"${recipe.title}" added to your favorites.`)
               }
             >
               <Ionicons name="bookmark-outline" size={20} color={colors.sage} />
@@ -310,7 +310,7 @@ function FeedbackModal({
       const data = await res.json();
       setSubstitutes(data.substitutes || []);
     } catch {
-      Alert.alert("Erreur", "Impossible de contacter le serveur.");
+      Alert.alert("Error", "Unable to reach the server.");
       onClose();
     } finally {
       setSubmitting(false);
@@ -328,7 +328,7 @@ function FeedbackModal({
         <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10 max-h-[80%]">
           <View className="flex-row items-center justify-between mb-4">
             <AppText className="text-[17px] font-bold text-foreground">
-              Ingrédients manquants
+              Missing ingredients
             </AppText>
             <Pressable onPress={onClose}>
               <Ionicons name="close" size={22} color={colors.mutedText} />
@@ -339,7 +339,7 @@ function FeedbackModal({
             {substitutes.length === 0 ? (
               <>
                 <AppText className="text-[14px] text-muted-foreground mb-4">
-                  {"Ces ingrédients manquent pour \""}{recipe.title}{"\" :"}
+                  {"These ingredients are missing for \""}{recipe.title}{"\" :"}
                 </AppText>
                 <View className="gap-2 mb-5">
                   {recipe.missing_ingredients.map((ing, i) => (
@@ -367,14 +367,14 @@ function FeedbackModal({
                   style={{ backgroundColor: colors.sage }}
                 >
                   <AppText className="text-[15px] font-bold text-white">
-                    {submitting ? "Recherche de substituts..." : "Voir les substituts"}
+                    {submitting ? "Finding substitutes..." : "View substitutes"}
                   </AppText>
                 </Pressable>
               </>
             ) : (
               <>
                 <AppText className="text-[14px] text-muted-foreground mb-4">
-                  Voici des substituts pour les ingrédients manquants :
+                  Here are substitutes for the missing ingredients:
                 </AppText>
                 {substitutes.map((sub, i) => (
                   <View
@@ -407,7 +407,7 @@ function FeedbackModal({
                   className="rounded-2xl py-4 items-center mt-2 active:opacity-80"
                   style={{ backgroundColor: colors.sage }}
                 >
-                  <AppText className="text-[15px] font-bold text-white">Fermer</AppText>
+                  <AppText className="text-[15px] font-bold text-white">Close</AppText>
                 </Pressable>
               </>
             )}
@@ -436,7 +436,7 @@ export default function RecipesScreen() {
     ? JSON.parse(params.apiResults)
     : [];
 
-  const mealLabel = params.mealLabel || "Recettes";
+  const mealLabel = params.mealLabel || "Recipes";
   const hasResults = apiRecipes.length > 0;
 
   // session_id simple basé sur le profil (à remplacer par un vrai auth token)
@@ -454,12 +454,12 @@ export default function RecipesScreen() {
           <View className="flex-row justify-between items-center">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">
-                {hasResults ? mealLabel : "Recettes 🍽️"}
+                {hasResults ? mealLabel : "Recipes 🍽️"}
               </AppText>
               <AppText className="text-[15px] text-muted-foreground mt-1">
                 {hasResults
-                  ? `${apiRecipes.length} recettes adaptées à ton frigo`
-                  : "Basées sur votre frigo et vos objectifs"}
+                  ? `${apiRecipes.length} recipes matched to your fridge`
+                  : "Based on your fridge and your goals"}
               </AppText>
             </View>
             {hasResults && (
@@ -470,7 +470,7 @@ export default function RecipesScreen() {
               >
                 <Ionicons name="refresh-outline" size={14} color={colors.sage} />
                 <AppText className="text-[13px] font-medium" style={{ color: colors.sage }}>
-                  Relancer
+                  Run again
                 </AppText>
               </Pressable>
             )}
@@ -490,7 +490,7 @@ export default function RecipesScreen() {
                     {apiRecipes.length}
                   </AppText>
                   <AppText className="text-[12px] text-muted-foreground text-center mt-1">
-                    recettes trouvées
+                    recipes found
                   </AppText>
                 </View>
                 <View className="flex-1 items-center py-4 px-2 border-r border-border">
@@ -501,7 +501,7 @@ export default function RecipesScreen() {
                     {apiRecipes.filter((r) => r.calorie_fit === "perfect").length}
                   </AppText>
                   <AppText className="text-[12px] text-muted-foreground text-center mt-1">
-                    calories adaptées
+                    on-target calories
                   </AppText>
                 </View>
                 <View className="flex-1 items-center py-4 px-2">
@@ -512,7 +512,7 @@ export default function RecipesScreen() {
                     {profile.calorieTarget || 2100}
                   </AppText>
                   <AppText className="text-[12px] text-muted-foreground text-center mt-1">
-                    kcal objectif
+                    kcal goal
                   </AppText>
                 </View>
               </View>
@@ -536,10 +536,10 @@ export default function RecipesScreen() {
                 <Ionicons name="restaurant-outline" size={32} color={colors.sage} />
               </View>
               <AppText className="text-[16px] font-semibold text-foreground text-center">
-                Pas encore de suggestions
+                No suggestions yet
               </AppText>
               <AppText className="text-[14px] text-muted-foreground text-center px-8">
-                {"Va dans l'onglet Frigo et appuie sur \"Suggérer des recettes\" pour commencer."}
+                {"Go to the Fridge tab and tap \"Suggest recipes\" to get started."}
               </AppText>
               <Pressable
                 onPress={() => router.push("/(tabs)/frigo")}
@@ -547,7 +547,7 @@ export default function RecipesScreen() {
                 style={{ backgroundColor: colors.sage }}
               >
                 <AppText className="text-[15px] font-bold text-white">
-                  Ouvrir mon frigo
+                  Open my fridge
                 </AppText>
               </Pressable>
             </View>

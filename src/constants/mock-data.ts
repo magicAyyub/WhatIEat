@@ -9,34 +9,34 @@ export const RECIPE_IMAGES = {
 } as const;
 
 export const homeExpiringItems: ExpiringItem[] = [
-  { name: "Avocado", quantity: "2 pièces", expiresIn: 1, icon: "food-variant" },
-  { name: "greek yogurt",   quantity: "500g", expiresIn: 2, icon: "cup" },
-  { name: "cherry tomatoes",quantity: "250g", expiresIn: 0, icon: "fruit-cherries" },
+  { name: "Avocado", quantity: "2 pieces", expiresIn: 1, icon: "food-variant" },
+  { name: "Greek yogurt", quantity: "500g", expiresIn: 2, icon: "cup" },
+  { name: "Cherry tomatoes", quantity: "250g", expiresIn: 0, icon: "fruit-cherries" },
 ];
 
 export const featuredHomeRecipe: RecipeCardData = {
-  name: "Bowl Méditerranéen Poulet-Quinoa",
+  name: "Mediterranean Chicken-Quinoa Bowl",
   calories: 520,
   protein: 38,
   carbs: 45,
   fat: 18,
   time: "25 min",
   matchPercent: 95,
-  tags: ["Riche en protéines", "Sans gluten"],
+  tags: ["High protein", "Gluten-free"],
   imageUrl: RECIPE_IMAGES.mediterranean,
 };
 
 export const lunchRecipes: RecipeCardData[] = [
   featuredHomeRecipe,
   {
-    name: "Poké Bowl Saumon-Mangue",
+    name: "Salmon-Mango Poke Bowl",
     calories: 480,
     protein: 32,
     carbs: 52,
     fat: 14,
     time: "15 min",
     matchPercent: 88,
-    tags: ["Oméga-3", "Rapide"],
+    tags: ["Omega-3", "Quick"],
     imageUrl: RECIPE_IMAGES.poke,
   },
 ];

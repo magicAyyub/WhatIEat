@@ -24,27 +24,27 @@ import { APP_CONFIG } from "@/config/runtime";
 const API_BASE = BASE_URL;
 
 const categories = [
-  "Tout",
+  "All",
   "Fruits",
-  "Légumes",
-  "Protéines",
-  "Laitier",
-  "Céréales",
+  "Vegetables",
+  "Protein",
+  "Dairy",
+  "Grains",
 ];
 
 const MEAL_OPTIONS = [
-  { key: "breakfast", label: "Petit-déjeuner", emoji: "☀️", route: "/recommend/breakfast" },
-  { key: "lunch",     label: "Déjeuner",       emoji: "🥗", route: "/recommend/lunch"     },
-  { key: "dinner",    label: "Dîner",           emoji: "🌙", route: "/recommend/dinner"    },
-  { key: "snack",     label: "Snack",           emoji: "🍎", route: "/recommend/snack"     },
+  { key: "breakfast", label: "Breakfast", emoji: "☀️", route: "/recommend/breakfast" },
+  { key: "lunch",     label: "Lunch",     emoji: "🥗", route: "/recommend/lunch"     },
+  { key: "dinner",    label: "Dinner",    emoji: "🌙", route: "/recommend/dinner"    },
+  { key: "snack",     label: "Snack",     emoji: "🍎", route: "/recommend/snack"     },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function formatExpiry(expiresIn?: number) {
   if (expiresIn === undefined) return null;
-  if (expiresIn === 0) return "Aujourd'hui";
-  return `${expiresIn}j`;
+  if (expiresIn === 0) return "Today";
+  return `${expiresIn}d`;
 }
 
 function getExpiresIn(expiresAt?: string): number | undefined {
@@ -147,7 +147,7 @@ function MealPickerModal({
         <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10">
           <View className="flex-row items-center justify-between mb-2">
             <AppText className="text-[18px] font-bold text-foreground">
-              Quel repas préparer ?
+              What meal are you making?
             </AppText>
             <Pressable onPress={onClose} className="p-1">
               <Ionicons name="close" size={22} color={colors.mutedText} />
@@ -155,9 +155,9 @@ function MealPickerModal({
           </View>
 
           <AppText className="text-[14px] text-muted-foreground mb-5">
-            Les recettes seront adaptées à tes objectifs caloriques
+            Recipes will match your calorie goals
             {expiringCount > 0
-              ? ` et prioriseront tes ${expiringCount} aliment${expiringCount > 1 ? "s" : ""} à consommer vite.`
+              ? ` and prioritize your ${expiringCount} item${expiringCount > 1 ? "s" : ""} expiring soon.`
               : "."}
           </AppText>
 
@@ -191,7 +191,7 @@ function MealPickerModal({
 // ── Écran principal ────────────────────────────────────────────────────────
 
 export default function FrigoScreen() {
-  const [activeCategory, setActiveCategory] = useState("Tout");
+  const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [mealPickerOpen, setMealPickerOpen] = useState(false);
@@ -205,14 +205,14 @@ export default function FrigoScreen() {
   const items = ingredients.map((ing) => ({
     ...ing,
     expiresIn: getExpiresIn(ing.expiresAt),
-    category: ing.category || "Autre",
+    category: ing.category || "Other",
     icon: ing.icon || "food-variant",
     quantity: ing.quantity || "1",
   }));
 
   const filtered = items.filter((item) => {
     const matchCategory =
-      activeCategory === "Tout" || item.category === activeCategory;
+      activeCategory === "All" || item.category === activeCategory;
     const matchSearch = item.name.toLowerCase().includes(search.toLowerCase());
     return matchCategory && matchSearch;
   });
@@ -263,7 +263,7 @@ export default function FrigoScreen() {
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        throw new Error(err.detail || `Erreur ${response.status}`);
+        throw new Error(err.detail || `Error ${response.status}`);
       }
 
       const data = await response.json();
@@ -279,8 +279,8 @@ export default function FrigoScreen() {
       });
     } catch (error) {
       Alert.alert(
-        "Impossible de charger les recettes",
-        error instanceof Error ? error.message : "Vérifie que le serveur est démarré.",
+        "Unable to load recipes",
+        error instanceof Error ? error.message : "Make sure the server is running.",
       );
     } finally {
       setLoadingRecipes(false);
@@ -302,7 +302,7 @@ export default function FrigoScreen() {
         });
       }
     } catch (error) {
-      Alert.alert("Erreur", `Impossible d'accéder à la caméra: ${String(error)}`);
+      Alert.alert("Error", `Unable to access the camera: ${String(error)}`);
     }
   };
 
@@ -321,7 +321,7 @@ export default function FrigoScreen() {
         });
       }
     } catch (error) {
-      Alert.alert("Erreur", `Impossible d'accéder à la galerie: ${String(error)}`);
+      Alert.alert("Error", `Unable to access the gallery: ${String(error)}`);
     }
   };
 
@@ -337,10 +337,10 @@ export default function FrigoScreen() {
           <View className="flex-row justify-between items-start">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">
-                Mon Frigo
+                My Fridge
               </AppText>
               <AppText className="text-[15px] text-muted-foreground mt-1">
-                {items.length} ingrédients en stock
+                {items.length} ingredients in stock
               </AppText>
             </View>
             <Pressable
@@ -361,7 +361,7 @@ export default function FrigoScreen() {
           >
             <Ionicons name="search" size={18} color={colors.mutedText} />
             <TextInput
-              placeholder="Rechercher un ingrédient..."
+              placeholder="Search for an ingredient..."
               value={search}
               onChangeText={setSearch}
               className="flex-1 text-[15px] text-foreground"
@@ -409,7 +409,7 @@ export default function FrigoScreen() {
                   className="text-[14px] font-bold"
                   style={{ color: colors.destructive }}
                 >
-                  À consommer rapidement
+                  Use soon
                 </AppText>
               </View>
               {expiringSoon.map((item) => (
@@ -426,12 +426,12 @@ export default function FrigoScreen() {
           {/* Stock normal */}
           <View>
             <AppText className="text-[15px] font-bold text-foreground mb-3">
-              En stock
+              In stock
             </AppText>
             {others.length === 0 && expiringSoon.length === 0 ? (
               <View className="rounded-2xl border p-6 items-center justify-center bg-white border-zinc-100">
                 <AppText className="text-muted-foreground text-[14px]">
-                  Votre frigo est vide. Ajoutez des ingrédients !
+                  Your fridge is empty. Add some ingredients!
                 </AppText>
               </View>
             ) : (
@@ -468,8 +468,8 @@ export default function FrigoScreen() {
               )}
               <AppText className="text-[16px] font-bold text-white">
                 {loadingRecipes
-                  ? "Recherche en cours..."
-                  : "Suggérer des recettes"}
+                  ? "Searching..."
+                  : "Suggest recipes"}
               </AppText>
               {expiringSoon.length > 0 && !loadingRecipes && (
                 <View
@@ -477,7 +477,7 @@ export default function FrigoScreen() {
                   style={{ backgroundColor: "rgba(255,255,255,0.25)" }}
                 >
                   <AppText className="text-[11px] font-bold text-white">
-                    {expiringSoon.length} urgent{expiringSoon.length > 1 ? "s" : ""}
+                    {expiringSoon.length} urgent
                   </AppText>
                 </View>
               )}
@@ -507,7 +507,7 @@ export default function FrigoScreen() {
         >
           <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10">
             <AppText className="text-[18px] font-bold mb-4">
-              Ajouter des ingrédients
+              Add ingredients
             </AppText>
             <Pressable
               onPress={handleScanCamera}
@@ -517,10 +517,10 @@ export default function FrigoScreen() {
               <Ionicons name="camera-outline" size={24} color={colors.sage} />
               <View className="flex-1">
                 <AppText className="text-[15px] font-semibold">
-                  Prendre une photo
+                  Take a photo
                 </AppText>
                 <AppText className="text-[13px] text-muted-foreground">
-                  Scanner ton frigo avec la caméra
+                  Scan your fridge with the camera
                 </AppText>
               </View>
             </Pressable>
@@ -532,10 +532,10 @@ export default function FrigoScreen() {
               <Ionicons name="images-outline" size={24} color={colors.sage} />
               <View className="flex-1">
                 <AppText className="text-[15px] font-semibold">
-                  Choisir une photo
+                  Choose a photo
                 </AppText>
                 <AppText className="text-[13px] text-muted-foreground">
-                  Depuis la galerie
+                  From your gallery
                 </AppText>
               </View>
             </Pressable>

@@ -18,8 +18,8 @@ type ExpiringItemRowProps = {
 
 function formatExpiry(expiresIn?: number) {
   if (expiresIn === undefined) return null;
-  if (expiresIn === 0) return "Aujourd'hui";
-  return `${expiresIn}j`;
+  if (expiresIn === 0) return "Today";
+  return `${expiresIn}d`;
 }
 
 export function ExpiringItemRow({ item, onPress }: ExpiringItemRowProps) {

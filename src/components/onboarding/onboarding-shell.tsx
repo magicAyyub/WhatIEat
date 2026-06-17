@@ -45,7 +45,7 @@ export function OnboardingShell({
           )}
 
           <AppText className="text-[13px] text-muted-foreground">
-            Étape {step} / {ONBOARDING_STEPS}
+            Step {step} / {ONBOARDING_STEPS}
           </AppText>
 
           <View

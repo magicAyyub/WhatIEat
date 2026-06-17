@@ -131,7 +131,7 @@ export function RecipeCardLarge({
             >
               <Ionicons name="restaurant-outline" size={18} color="#fff" />
               <AppText className="text-[15px] font-semibold text-white">
-                Valider ce repas
+                Log this meal
               </AppText>
             </Pressable>
           </>
