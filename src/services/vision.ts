@@ -36,6 +36,9 @@ export async function uploadFridgeImage(
   const response = await fetch(`${BASE_URL}/vision/scan?${params.toString()}`, {
     method: "POST",
     body: formData,
+    headers: APP_CONFIG.apiKey ? {
+      "X-API-Key": APP_CONFIG.apiKey,
+    } : {},
     // Do NOT set Content-Type here — fetch sets it automatically with the boundary
   });
 

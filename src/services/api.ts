@@ -20,6 +20,7 @@ async function request<T>(
     method,
     headers: {
       "Content-Type": "application/json",
+      ...(APP_CONFIG.apiKey ? { "X-API-Key": APP_CONFIG.apiKey } : {}),
       ...headers,
     },
     body,

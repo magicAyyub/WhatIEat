@@ -17,9 +17,11 @@ import { useRouter } from "expo-router";
 import { useProfileStore } from "@/store/profile-store";
 import type { Ingredient } from "@/types/ingredient";
 import { getSafeIconName } from "@/helpers/utils/icons";
+import { BASE_URL } from "@/services/api";
+import { APP_CONFIG } from "@/config/runtime";
 
 // ── Config API ─────────────────────────────────────────────────────────────
-const API_BASE = "http://172.20.10.5:8000";
+const API_BASE = BASE_URL;
 
 const categories = [
   "Tout",
@@ -252,7 +254,10 @@ export default function FrigoScreen() {
 
       const response = await fetch(`${API_BASE}${meal.route}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(APP_CONFIG.apiKey ? { "X-API-Key": APP_CONFIG.apiKey } : {}),
+        },
         body: JSON.stringify(payload),
       });
 

@@ -3,7 +3,7 @@ import { colors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useProfileStore } from "@/store/profile-store";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Modal,
@@ -11,10 +11,11 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import React from "react";
+import { BASE_URL } from "@/services/api";
+import { APP_CONFIG } from "@/config/runtime";
 
 // ── Config API ─────────────────────────────────────────────────────────────
-const API_BASE = "http://172.20.10.5:8000";
+const API_BASE = BASE_URL;
 const MEAL_LABELS: Record<string, string> = {
   breakfast: "Petit-déjeuner",
   lunch:     "Déjeuner",
@@ -294,7 +295,10 @@ function FeedbackModal({
     try {
       const res = await fetch(`${API_BASE}/feedback`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(APP_CONFIG.apiKey ? { "X-API-Key": APP_CONFIG.apiKey } : {}),
+        },
         body: JSON.stringify({
           session_id:          sessionId,
           recipe_title:        recipe.title,
@@ -335,7 +339,7 @@ function FeedbackModal({
             {substitutes.length === 0 ? (
               <>
                 <AppText className="text-[14px] text-muted-foreground mb-4">
-                  Ces ingrédients manquent pour "{recipe.title}" :
+                  {"Ces ingrédients manquent pour \""}{recipe.title}{"\" :"}
                 </AppText>
                 <View className="gap-2 mb-5">
                   {recipe.missing_ingredients.map((ing, i) => (
@@ -535,7 +539,7 @@ export default function RecipesScreen() {
                 Pas encore de suggestions
               </AppText>
               <AppText className="text-[14px] text-muted-foreground text-center px-8">
-                Va dans l'onglet Frigo et appuie sur "Suggérer des recettes" pour commencer.
+                {"Va dans l'onglet Frigo et appuie sur \"Suggérer des recettes\" pour commencer."}
               </AppText>
               <Pressable
                 onPress={() => router.push("/(tabs)/frigo")}
