@@ -7,7 +7,6 @@
     "icon": "./src/assets/images/icon.png",
     "scheme": "whatieat",
     "userInterfaceStyle": "automatic",
-    //"newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -46,7 +45,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

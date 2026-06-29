@@ -1,68 +1,67 @@
+/**
+ * store/profile-store.ts
+ * ───────────────────────
+ * Profil utilisateur — sync automatique vers NeonDB.
+ */
+
 import { defaultUserProfile, type UserProfile } from "@/types/profile";
 import { calculateCalorieTarget } from "@/utils/calories";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { userService } from "@/services/userService";
 
 type ProfileStore = {
-  profile: UserProfile;
-  hydrated: boolean;
-  setHydrated: (value: boolean) => void;
-  setProfile: (updates: Partial<UserProfile>) => void;
+  profile:            UserProfile;
+  hydrated:           boolean;
+  setHydrated:        (v: boolean) => void;
+  setProfile:         (updates: Partial<UserProfile>) => void;
   completeOnboarding: () => void;
-  resetOnboarding: () => void;
+  resetOnboarding:    () => void;
 };
 
 export const useProfileStore = create<ProfileStore>()(
   persist(
     (set, get) => ({
-      profile: defaultUserProfile,
+      profile:  defaultUserProfile,
       hydrated: false,
-      setHydrated: (value) => set({ hydrated: value }),
+
+      setHydrated: (v) => set({ hydrated: v }),
+
       setProfile: (updates) => {
         const next = { ...get().profile, ...updates };
         const withCalories =
-          updates.age !== undefined ||
-          updates.weightKg !== undefined ||
-          updates.heightCm !== undefined ||
-          updates.activityLevel !== undefined ||
-          updates.sportsObjective !== undefined
-            ? {
-                ...next,
-                calorieTarget: calculateCalorieTarget(next),
-              }
+          ["age", "weightKg", "heightCm", "activityLevel", "sportsObjective"]
+            .some((k) => k in updates)
+            ? { ...next, calorieTarget: calculateCalorieTarget(next) }
             : next;
         set({ profile: withCalories });
+        // Sync silencieux vers NeonDB
+        userService.syncProfileToDB(withCalories);
       },
+
       completeOnboarding: () => {
         const profile = get().profile;
-        set({
-          profile: {
-            ...profile,
-            hasCompletedOnboarding: true,
-            calorieTarget: calculateCalorieTarget(profile),
-          },
-        });
+        const updated = {
+          ...profile,
+          hasCompletedOnboarding: true,
+          calorieTarget: calculateCalorieTarget(profile),
+        };
+        set({ profile: updated });
+        userService.syncProfileToDB(updated);
       },
+
       resetOnboarding: () =>
-        set({
-          profile: { ...defaultUserProfile, hasCompletedOnboarding: false },
-        }),
+        set({ profile: { ...defaultUserProfile, hasCompletedOnboarding: false } }),
     }),
     {
-      name: "whatieat-profile",
+      name:    "whatieat-profile",
       storage: createJSONStorage(() => AsyncStorage),
       merge: (persisted, current) => {
         const saved = persisted as Partial<ProfileStore> | undefined;
-        return {
-          ...current,
-          ...saved,
-          profile: { ...defaultUserProfile, ...saved?.profile },
-        };
+        return { ...current, ...saved, profile: { ...defaultUserProfile, ...saved?.profile } };
       },
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
-      },
+      onRehydrateStorage: () => (state) => { state?.setHydrated(true); },
     },
   ),
 );
