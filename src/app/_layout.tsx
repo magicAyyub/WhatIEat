@@ -18,6 +18,7 @@ import {
     configureReanimatedLogger,
     ReanimatedLogLevel,
 } from "react-native-reanimated";
+import { Uniwind } from "uniwind";
 import "../../global.css";
 import { AppThemeProvider } from "../contexts/app-theme-context";
 
@@ -25,6 +26,9 @@ configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false,
 });
+
+// Force light theme on startup
+Uniwind.setTheme("light");
 
 /**
  * Component that wraps app content inside KeyboardProvider

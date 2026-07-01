@@ -1,4 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Image, Pressable, View } from "react-native";
 
 import { CameraCapture } from "@/components/scan/CameraCapture";
@@ -7,8 +9,12 @@ import { ScanResultPanel } from "@/components/scan/ScanResultPanel";
 import { ScanSettingsModal } from "@/components/scan/ScanSettingsModal";
 import { PREVIEW_SIZE } from "@/helpers/utils/scan";
 import { useScanner } from "@/hooks/useScanner";
+import { useFridgeStore } from "@/store";
 
 export default function ScanScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{ imageUri?: string }>();
+
   const {
     mode,
     loading,
@@ -23,12 +29,27 @@ export default function ScanScreen() {
     setScoreThreshold,
     settingsOpen,
     setSettingsOpen,
-    hasIngredients,
     confidenceText,
-    ingredients,
+    scannedIngredients,
     handleCapture,
     resetToCamera,
   } = useScanner();
+
+  useEffect(() => {
+    if (params.imageUri) {
+      handleCapture(params.imageUri);
+    }
+  }, [params.imageUri]);
+
+  const handleReset = () => {
+    router.setParams({ imageUri: undefined });
+    resetToCamera();
+  };
+
+  const handleAddIngredients = () => {
+    useFridgeStore.getState().addIngredients(scannedIngredients);
+    router.replace("/(tabs)/frigo");
+  };
 
   const settingsButton = (
     <Pressable
@@ -50,14 +71,14 @@ export default function ScanScreen() {
       scoreThreshold={scoreThreshold}
       onScoreThresholdChange={setScoreThreshold}
       boxesNote={
-        mode === "camera"
+        mode === "camera" && !params.imageUri
           ? "Default comes from runtime-config.json. This switch changes current session only."
           : "Turn off for a cleaner result view."
       }
     />
   );
 
-  if (mode === "camera") {
+  if (mode === "camera" && !params.imageUri) {
     return (
       <View className="flex-1 bg-black">
         <CameraCapture
@@ -75,7 +96,7 @@ export default function ScanScreen() {
         <View className="mb-3 w-full max-h-77.5 flex-row items-center justify-between">
           <Pressable
             className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
-            onPress={resetToCamera}
+            onPress={handleReset}
           >
             <Ionicons name="arrow-back" size={22} color="white" />
           </Pressable>
@@ -104,10 +125,10 @@ export default function ScanScreen() {
       <ScanResultPanel
         loading={loading}
         error={error}
-        hasIngredients={hasIngredients}
-        ingredients={ingredients}
+        ingredients={scannedIngredients}
         confidenceText={confidenceText}
-        onScanAnother={resetToCamera}
+        onScanAnother={handleReset}
+        onAddIngredients={handleAddIngredients}
       />
 
       {settingsModal}

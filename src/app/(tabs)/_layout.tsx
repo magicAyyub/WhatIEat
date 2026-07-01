@@ -1,40 +1,37 @@
-import { Ionicons } from "@expo/vector-icons";
+/**
+ * app/(tabs)/_layout.tsx
+ * ───────────────────────
+ * Tab bar avec onglet "Liked" ajouté.
+ */
+
+import { TabBarIcon } from "@/components/whatieat/tab-bar-icon";
+import { colors } from "@/constants/colors";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown:           false,
+        tabBarActiveTintColor:   colors.sage,
+        tabBarInactiveTintColor: colors.mutedText,
+        tabBarStyle: {
+          backgroundColor: colors.white,
+          borderTopColor:  colors.border,
+          borderTopWidth:  1,
+          height:          88,
+          paddingTop:      8,
+          paddingBottom:   28,
+        },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: "500", marginTop: -2 },
       }}
     >
-      <Tabs.Screen
-        name="scan"
-        options={{
-          title: "Scan",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="camera-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="recipes"
-        options={{
-          title: "Recipes",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="restaurant-outline" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="index"   options={{ title: "Home",    tabBarIcon: ({ focused }) => <TabBarIcon name="home-outline"       focused={focused} /> }} />
+      <Tabs.Screen name="frigo"   options={{ title: "Fridge",  tabBarIcon: ({ focused }) => <TabBarIcon name="cube-outline"       focused={focused} /> }} />
+      <Tabs.Screen name="recipes" options={{ title: "Recipes", tabBarIcon: ({ focused }) => <TabBarIcon name="restaurant-outline" focused={focused} /> }} />
+      <Tabs.Screen name="liked"   options={{ title: "Liked",   tabBarIcon: ({ focused }) => <TabBarIcon name="heart-outline"      focused={focused} /> }} />
+      <Tabs.Screen name="profile" options={{ title: "Profile", tabBarIcon: ({ focused }) => <TabBarIcon name="person-outline"     focused={focused} /> }} />
+      <Tabs.Screen name="scan"    options={{ href: null }} />
     </Tabs>
   );
 }

@@ -16,7 +16,7 @@ type ErrorViewProps = {
   className?: string;
   classNames?: { text?: string };
   children?: React.ReactNode;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   animation?: { entering?: { value?: any } };
 };
 

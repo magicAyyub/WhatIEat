@@ -4,13 +4,11 @@ export type Ingredient = {
   quantity?: string;
   unit?: string;
   expiresAt?: string; // ISO date string
+  icon?: string;
+  category?: string;
 };
 
-export type UserProfile = {
-  dietaryRestrictions: string[]; // e.g. ["gluten-free", "vegan"]
-  sportsObjective?: "weight-loss" | "muscle-gain" | "maintenance";
-  calorieTarget?: number;
-};
+export type { UserProfile, SportsObjective, ActivityLevel } from "./profile";
 
 export type Recipe = {
   id: string;

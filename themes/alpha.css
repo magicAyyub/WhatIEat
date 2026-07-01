@@ -1,8 +1,21 @@
+@theme inline {
+  --color-sage: #3d6b4d;
+  --color-sage-muted: #e8f0ea;
+  --color-cream: #f9f8f4;
+  --color-macro-protein: #2563eb;
+  --color-macro-carbs: #ea580c;
+  --color-macro-fat: #db2777;
+  --color-tag-protein: #dcfce7;
+  --color-tag-gluten: #dbeafe;
+  --color-expiring-bg: #fef2f2;
+  --color-expiring-border: #fecaca;
+}
+
 @layer theme {
   :root {
     @variant light {
-      /* Base Colors */
-      --background: var(--white);
+      /* Base Colors — WhatIEat cream canvas */
+      --background: #f9f8f4;
       --foreground: var(--eclipse);
 
       /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
