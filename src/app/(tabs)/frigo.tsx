@@ -33,7 +33,7 @@ import { getSafeIconName } from "@/helpers/utils/icons";
 import { BASE_URL } from "@/services/api";
 
 const API_BASE = BASE_URL;
-
+import { APP_CONFIG } from "@/config/runtime";
 // Catégories chargées dynamiquement depuis la DB
 const DEFAULT_CATEGORIES = ["All", "Fruits", "Vegetables", "Protein", "Dairy", "Grains"];
 const UNITS      = ["g", "kg", "ml", "l", "pieces", "tbsp", "tsp", "cups"];
@@ -540,7 +540,7 @@ export default function FrigoScreen() {
       };
 
       const response = await fetch(`${API_BASE}${meal.route}`, {
-        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+        method: "POST", headers: { "Content-Type": "application/json", ...(APP_CONFIG.apiKey ? { "X-API-Key": APP_CONFIG.apiKey } : {}) }, body: JSON.stringify(payload),
       });
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
@@ -562,18 +562,30 @@ export default function FrigoScreen() {
     } finally { setLoadingRecipes(false); }
   };
 
-  const handleScanCamera = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 1 });
-      if (!result.canceled && result.assets[0]) router.push({ pathname: "/(tabs)/scan", params: { imageUri: result.assets[0].uri } });
-    } catch (error) { Alert.alert("Error", String(error)); }
+  const handleScanCamera = () => {
+    router.push("/(tabs)/scan");
   };
 
   const handlePickImage = async () => {
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 1 });
-      if (!result.canceled && result.assets[0]) router.push({ pathname: "/(tabs)/scan", params: { imageUri: result.assets[0].uri } });
-    } catch (error) { Alert.alert("Error", String(error)); }
+      // Demande permission galerie
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission refusée", "L'accès à la galerie est nécessaire.");
+        return;
+      }
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        allowsEditing: false,
+      });
+      if (!result.canceled && result.assets[0]) {
+        router.push({ pathname: "/(tabs)/scan", params: { imageUri: result.assets[0].uri } });
+      }
+    } catch (error) {
+      console.error("Gallery error:", error);
+      Alert.alert("Erreur", String(error));
+    }
   };
 
   return (
