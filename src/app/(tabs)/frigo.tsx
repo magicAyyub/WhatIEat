@@ -191,10 +191,10 @@ function IngredientFormModal({ visible, onClose, onSave, initial }: {
   const minDate = new Date();
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <Pressable className="flex-1 bg-black/40" onPress={onClose}>
-          <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10">
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <KeyboardAvoidingView className="flex-1 justify-end" behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <Pressable className="absolute inset-0 bg-black/40" onPress={onClose} />
+        <View className="bg-background rounded-t-3xl px-5 pt-5 pb-10">
             <View className="flex-row items-center justify-between mb-5">
               <AppText className="text-[18px] font-bold text-foreground">
                 {isEdit ? "Edit ingredient" : "Add ingredient"}
@@ -334,7 +334,6 @@ function IngredientFormModal({ visible, onClose, onSave, initial }: {
               </View>
             </ScrollView>
           </View>
-        </Pressable>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -349,9 +348,10 @@ function MealPickerModal({ visible, onClose, onSelect, expiringCount }: {
   expiringCount: number;
 }) {
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 bg-black/40" onPress={onClose}>
-        <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10">
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View className="flex-1 justify-end">
+        <Pressable className="absolute inset-0 bg-black/40" onPress={onClose} />
+        <View className="bg-background rounded-t-3xl px-5 pt-5 pb-10">
           <View className="flex-row items-center justify-between mb-2">
             <AppText className="text-[18px] font-bold text-foreground">Which meal?</AppText>
             <Pressable onPress={onClose}><Ionicons name="close" size={22} color={colors.mutedText} /></Pressable>
@@ -376,7 +376,7 @@ function MealPickerModal({ visible, onClose, onSelect, expiringCount }: {
             ))}
           </View>
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 }
@@ -391,9 +391,10 @@ function AddMethodModal({ visible, onClose, onCamera, onGallery, onManual }: {
   onManual:  () => void;
 }) {
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 bg-black/40" onPress={onClose}>
-        <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10">
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View className="flex-1 justify-end">
+        <Pressable className="absolute inset-0 bg-black/40" onPress={onClose} />
+        <View className="bg-background rounded-t-3xl px-5 pt-5 pb-10">
           <AppText className="text-[18px] font-bold mb-4">Add ingredients</AppText>
           {[
             { icon: "camera-outline", title: "Take a photo",   sub: "Scan your fridge",    action: onCamera  },
@@ -409,7 +410,7 @@ function AddMethodModal({ visible, onClose, onCamera, onGallery, onManual }: {
             </Pressable>
           ))}
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 }

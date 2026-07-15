@@ -12,6 +12,7 @@ import { userService } from "@/services/userService";
 
 export type MealLog = {
   id:          string;
+  recipe_id?:  number;
   title:       string;
   meal_type:   string;
   calories:    number;
@@ -78,6 +79,7 @@ export const useNutritionStore = create<NutritionStore>()(
           if (preps.length > 0) {
             const meals: MealLog[] = preps.map((p) => ({
               id:        String(p.id),
+              recipe_id: p.recipe_id,
               title:     p.title,
               meal_type: p.meal_type || "meal",
               calories:  p.calories  || 0,
@@ -87,7 +89,7 @@ export const useNutritionStore = create<NutritionStore>()(
               logged_at: p.prepared_at,
             }));
             set({ date: today, meals });
-          } else if (get().date !== today) {
+          } else {
             set({ date: today, meals: [] });
           }
         } catch (e) {

@@ -10,7 +10,8 @@ import { useAuthStore } from "@/store/auth-store";
 import { useFridgeStore } from "@/store";
 import { useNutritionStore, type MealLog } from "@/store/nutrition-store";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import * as Haptics from "expo-haptics";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -19,10 +20,19 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 
 const MEAL_EMOJI: Record<string, string> = {
   breakfast: "☀️", lunch: "🥗", dinner: "🌙", snack: "🍎",
 };
+
+type FilterTab = "liked" | "already_cooked" | "cooked_today";
+
+const FILTER_TABS: { key: FilterTab; label: string }[] = [
+  { key: "liked",           label: "Liked" },
+  { key: "already_cooked",  label: "Already cooked" },
+  { key: "cooked_today",    label: "Cooked today" },
+];
 
 // ── Types locaux ───────────────────────────────────────────────────────────
 
@@ -136,8 +146,9 @@ function RecipeDetailModal({
   const ownedCount = allIngredients.filter((ing) => getStatus(ing) === "owned").length;
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 bg-black/40 justify-end">
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View className="flex-1 justify-end">
+        <Pressable className="absolute inset-0 bg-black/40" onPress={onClose} />
         <View className="bg-background rounded-t-3xl" style={{ maxHeight: "92%" }}>
           {/* Header */}
           <View
@@ -346,28 +357,110 @@ function RecipeDetailModal({
   );
 }
 
-// ── Carte recette ──────────────────────────────────────────────────────────
+// ── Filter tabs ────────────────────────────────────────────────────────────
+
+function FilterTabs({
+  active,
+  counts,
+  onChange,
+}: {
+  active:   FilterTab;
+  counts:   Record<FilterTab, number>;
+  onChange: (tab: FilterTab) => void;
+}) {
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ gap: 8, paddingVertical: 2 }}
+    >
+      {FILTER_TABS.map((tab) => {
+        const selected = active === tab.key;
+        return (
+          <Pressable
+            key={tab.key}
+            onPress={() => onChange(tab.key)}
+            className="rounded-full px-4 py-2 border active:opacity-80"
+            style={{
+              borderColor:     selected ? colors.sage : colors.border,
+              backgroundColor: selected ? `${colors.sage}15` : colors.white,
+            }}
+          >
+            <AppText
+              className="text-[13px] font-semibold"
+              style={{ color: selected ? colors.sage : colors.mutedText }}
+            >
+              {tab.label} ({counts[tab.key]})
+            </AppText>
+          </Pressable>
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+// ── Swipe action backgrounds ─────────────────────────────────────────────────
+
+function SwipeAction({
+  side,
+  label,
+  icon,
+  color,
+}: {
+  side:  "left" | "right";
+  label: string;
+  icon:  keyof typeof Ionicons.glyphMap;
+  color: string;
+}) {
+  return (
+    <View
+      className="justify-center mb-3"
+      style={{
+        backgroundColor: color,
+        width:           96,
+        borderRadius:    16,
+        alignItems:      side === "left" ? "flex-start" : "flex-end",
+        paddingHorizontal: 16,
+        marginLeft:      side === "right" ? 8 : 0,
+        marginRight:     side === "left" ? 8 : 0,
+      }}
+    >
+      <Ionicons name={icon} size={22} color={colors.white} />
+      <AppText className="text-[11px] font-semibold mt-1" style={{ color: colors.white }}>
+        {label}
+      </AppText>
+    </View>
+  );
+}
+
+function isRecipeCookedToday(recipe: RecipeDetail, meals: MealLog[]): boolean {
+  const id = String(recipe.id);
+  const title = recipe.title.toLowerCase();
+  return meals.some(
+    (m) => (m.recipe_id != null && String(m.recipe_id) === id) || m.title.toLowerCase() === title,
+  );
+}
+
+// ── Recipe card ──────────────────────────────────────────────────────────────
 
 function LikedRecipeCard({
   recipe,
   cookedToday,
-  onUnlike,
-  onMarkCooked,
   onViewDetail,
+  onCookToggle,
 }: {
   recipe:       RecipeDetail;
   cookedToday:  boolean;
-  onUnlike:     () => void;
-  onMarkCooked: () => void;
   onViewDetail: () => void;
+  onCookToggle: () => void;
 }) {
   const emoji = MEAL_EMOJI[recipe.meal_type ?? ""] ?? "🍽️";
-  const prepCount = (recipe as any).prep_count ?? 0;
+  const prepCount = (recipe as RecipeDetail & { prep_count?: number }).prep_count ?? 0;
   const missingCount = recipe.missing_ingredients?.length ?? 0;
 
   return (
     <View
-      className="rounded-2xl border mb-3 overflow-hidden"
+      className="rounded-2xl border overflow-hidden"
       style={{ backgroundColor: colors.white, borderColor: colors.border }}
     >
       <Pressable onPress={onViewDetail} className="px-4 pt-4 pb-3 active:opacity-80">
@@ -377,12 +470,19 @@ function LikedRecipeCard({
               <AppText className="text-[14px]">{emoji}</AppText>
               {cookedToday && (
                 <View className="rounded-full px-2 py-0.5" style={{ backgroundColor: colors.sageMuted }}>
-                  <AppText className="text-[11px] font-semibold" style={{ color: colors.sage }}>✓ Cooked today</AppText>
+                  <AppText className="text-[11px] font-semibold" style={{ color: colors.sage }}>
+                    Cooked today
+                  </AppText>
+                </View>
+              )}
+              {recipe.is_prepared && !cookedToday && (
+                <View className="rounded-full px-2 py-0.5 border" style={{ borderColor: colors.border }}>
+                  <AppText className="text-[11px] text-muted-foreground">Cooked before</AppText>
                 </View>
               )}
               {prepCount > 0 && (
                 <View className="rounded-full px-2 py-0.5 border" style={{ borderColor: colors.border }}>
-                  <AppText className="text-[11px] text-muted-foreground">{prepCount}× prepared</AppText>
+                  <AppText className="text-[11px] text-muted-foreground">{prepCount}x prepared</AppText>
                 </View>
               )}
             </View>
@@ -394,9 +494,9 @@ function LikedRecipeCard({
         </View>
 
         <View className="flex-row gap-3 flex-wrap">
-          {recipe.calories   && <AppText className="text-[12px] text-muted-foreground">🔥 {Math.round(recipe.calories)} kcal</AppText>}
-          {recipe.minutes    && <AppText className="text-[12px] text-muted-foreground">⏱ {recipe.minutes} min</AppText>}
-          {recipe.protein_g  && <AppText className="text-[12px] text-muted-foreground">💪 {Math.round(recipe.protein_g)}g P</AppText>}
+          {recipe.calories  && <AppText className="text-[12px] text-muted-foreground">{Math.round(recipe.calories)} kcal</AppText>}
+          {recipe.minutes   && <AppText className="text-[12px] text-muted-foreground">{recipe.minutes} min</AppText>}
+          {recipe.protein_g && <AppText className="text-[12px] text-muted-foreground">{Math.round(recipe.protein_g)}g protein</AppText>}
           {missingCount > 0 && (
             <View className="flex-row items-center gap-1">
               <Ionicons name="close-circle" size={12} color={colors.destructive} />
@@ -419,36 +519,101 @@ function LikedRecipeCard({
         </Pressable>
 
         <Pressable
-          onPress={onMarkCooked}
+          onPress={onCookToggle}
           className="flex-1 flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 border active:opacity-70"
           style={{
-            borderColor:     cookedToday ? colors.border : colors.sage,
-            backgroundColor: cookedToday ? colors.white  : `${colors.sage}12`,
+            borderColor:     cookedToday ? colors.sage : colors.border,
+            backgroundColor: cookedToday ? colors.sageMuted : colors.white,
           }}
         >
           <Ionicons
-            name={cookedToday ? "add-circle-outline" : "checkmark-circle-outline"}
+            name={cookedToday ? "close-circle-outline" : "restaurant-outline"}
             size={15}
-            color={colors.sage}
+            color={cookedToday ? colors.sage : colors.mutedText}
           />
-          <AppText className="text-[13px] font-medium" style={{ color: colors.sage }}>
-            {cookedToday ? "Cook again" : "I cooked this!"}
+          <AppText
+            className="text-[13px] font-medium"
+            style={{ color: cookedToday ? colors.sage : colors.mutedText }}
+          >
+            {cookedToday ? "Remove from today" : "I cooked this!"}
           </AppText>
-        </Pressable>
-
-        <Pressable
-          onPress={onUnlike}
-          className="flex-row items-center justify-center gap-1.5 rounded-xl py-2.5 px-3 border active:opacity-70"
-          style={{ borderColor: colors.border }}
-        >
-          <Ionicons name="heart-dislike-outline" size={14} color={colors.mutedText} />
         </Pressable>
       </View>
     </View>
   );
 }
 
-// ── Écran principal ────────────────────────────────────────────────────────
+function SwipeableLikedRecipeCard({
+  recipe,
+  cookedToday,
+  onUnlike,
+  onCookToggle,
+  onViewDetail,
+  onSwipeableOpen,
+}: {
+  recipe:           RecipeDetail;
+  cookedToday:      boolean;
+  onUnlike:         () => void;
+  onCookToggle:     () => void;
+  onViewDetail:     () => void;
+  onSwipeableOpen:  (ref: Swipeable | null) => void;
+}) {
+  const swipeRef = useRef<Swipeable>(null);
+
+  return (
+    <Swipeable
+      ref={swipeRef}
+      friction={2}
+      overshootFriction={8}
+      onSwipeableOpen={(direction) => {
+        onSwipeableOpen(swipeRef.current);
+        if (direction === "left" && cookedToday) {
+          swipeRef.current?.close();
+          return;
+        }
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        if (direction === "left") {
+          onCookToggle();
+        } else {
+          onUnlike();
+        }
+        swipeRef.current?.close();
+      }}
+      renderLeftActions={
+        cookedToday
+          ? undefined
+          : () => <SwipeAction side="left" label="Cooked" icon="checkmark-circle" color={colors.sage} />
+      }
+      renderRightActions={() => (
+        <SwipeAction side="right" label="Remove" icon="heart-dislike" color={colors.destructive} />
+      )}
+    >
+      <LikedRecipeCard
+        recipe={recipe}
+        cookedToday={cookedToday}
+        onViewDetail={onViewDetail}
+        onCookToggle={onCookToggle}
+      />
+    </Swipeable>
+  );
+}
+
+// ── Main screen ──────────────────────────────────────────────────────────────
+
+const EMPTY_MESSAGES: Record<FilterTab, { title: string; subtitle: string }> = {
+  liked: {
+    title:    "No liked recipes yet",
+    subtitle: "Like a recipe from suggestions to save it here.",
+  },
+  already_cooked: {
+    title:    "No cooked recipes yet",
+    subtitle: "Swipe right or tap \"I cooked this!\" on a liked recipe.",
+  },
+  cooked_today: {
+    title:    "Nothing cooked today",
+    subtitle: "Swipe right or tap \"I cooked this!\" to log today's intake.",
+  },
+};
 
 export default function LikedScreen() {
   const { likedRecipes, unlikeRecipe, loadFromDB }                   = useLikedStore();
@@ -457,99 +622,156 @@ export default function LikedScreen() {
   const { loadFridgeFromDB }                                         = useAuthStore();
   const ingredients                                                   = useFridgeStore((s) => s.ingredients);
 
-  const [loading,        setLoading]        = useState(true);
-  const [detailRecipe,   setDetailRecipe]   = useState<RecipeDetail | null>(null);
-  const [detailVisible,  setDetailVisible]  = useState(false);
-  const [currentDetail,  setCurrentDetail]  = useState<RecipeDetail | null>(null);
+  const [loading,       setLoading]       = useState(true);
+  const [activeFilter,  setActiveFilter]  = useState<FilterTab>("liked");
+  const [detailRecipe,  setDetailRecipe]  = useState<RecipeDetail | null>(null);
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [currentDetail, setCurrentDetail] = useState<RecipeDetail | null>(null);
+  const [markingId,     setMarkingId]     = useState<number | null>(null);
+
+  const openSwipeableRef = useRef<Swipeable | null>(null);
 
   const fridgeSet = new Set(ingredients.map((i) => i.name.toLowerCase()));
-  const cookedTodayIds = new Set(meals.map((m: MealLog) => m.id));
+
+  const cookedTodayRecipeIds = useMemo(
+    () => new Set(
+      likedRecipes
+        .filter((r) => isRecipeCookedToday(r as RecipeDetail, meals))
+        .map((r) => String(r.id)),
+    ),
+    [likedRecipes, meals],
+  );
+
+  const filterCounts = useMemo(() => ({
+    liked:          likedRecipes.length,
+    already_cooked: likedRecipes.filter((r) => r.is_prepared).length,
+    cooked_today:   likedRecipes.filter((r) => cookedTodayRecipeIds.has(String(r.id))).length,
+  }), [likedRecipes, cookedTodayRecipeIds]);
+
+  const filteredRecipes = useMemo(() => {
+    if (activeFilter === "already_cooked") {
+      return likedRecipes.filter((r) => r.is_prepared);
+    }
+    if (activeFilter === "cooked_today") {
+      return likedRecipes.filter((r) => cookedTodayRecipeIds.has(String(r.id)));
+    }
+    return likedRecipes;
+  }, [likedRecipes, activeFilter, cookedTodayRecipeIds]);
 
   useEffect(() => {
     Promise.all([loadFromDB(), loadNutrition()]).finally(() => setLoading(false));
   }, []);
 
-  const handleUnlike = (recipe: RecipeDetail) =>
-    Alert.alert("Remove recipe", `Remove "${recipe.title}"?`, [
-      { text: "Cancel", style: "cancel" },
-      { text: "Remove", style: "destructive", onPress: () => unlikeRecipe(recipe.id, recipe.title) },
-    ]);
+  const handleSwipeableOpen = useCallback((ref: Swipeable | null) => {
+    if (openSwipeableRef.current && openSwipeableRef.current !== ref) {
+      openSwipeableRef.current.close();
+    }
+    openSwipeableRef.current = ref;
+  }, []);
 
-  const handleMarkCooked = (recipe: RecipeDetail) => {
-    const alreadyToday = cookedTodayIds.has(String(recipe.id));
-    Alert.alert(
-      alreadyToday ? "Cook again? 🍳" : "Log this meal? 🍳",
-      alreadyToday
-        ? `Add another portion of "${recipe.title}" to today's log?`
-        : `"${recipe.title}" will be added to today's log.${recipe.calories ? `\n${Math.round(recipe.calories)} kcal` : ""}`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: alreadyToday ? "Yes, add again!" : "Yes, I cooked it!",
-          onPress: async () => {
-            try {
-              // Charge les données fraîches depuis la DB si pas encore chargées
-              // (le détail peut être null si on clique depuis la carte sans ouvrir le modal)
-              // Charge les données fraîches depuis la DB (matched/missing basés sur frigo actuel)
-              let freshDetail: RecipeDetail | null = currentDetail?.id === recipe.id ? currentDetail : null;
-              if (!freshDetail?.all_ingredients?.length) {
-                try {
-                  freshDetail = await userService.getRecipeDetail(recipe.id) as any;
-                  setCurrentDetail(freshDetail);
-                } catch (e) {
-                  console.warn("[markCooked] getRecipeDetail échoué:", e);
-                }
-              }
+  const handleUnlike = useCallback((recipe: RecipeDetail) => {
+    unlikeRecipe(recipe.id, recipe.title);
+  }, [unlikeRecipe]);
 
-              const freshMissing = new Set(
-                (freshDetail?.missing_ingredients ?? recipe.missing_ingredients ?? [])
-                  .map((s: string) => s.toLowerCase())
-              );
-              const allIngs = freshDetail?.all_ingredients ?? (recipe as any).all_ingredients ?? [];
-              const matched = allIngs.filter((ing: string) =>
-                !freshMissing.has(ing.toLowerCase())
-              );
-              console.log("[markCooked] all:", allIngs.length, "missing:", freshMissing.size, "matched:", matched.length);
-              await userService.markRecipeCooked(recipe.id, matched);
-              if (recipe.calories) {
-                logMeal({
-                  title:     recipe.title,
-                  meal_type: recipe.meal_type || "meal",
-                  calories:  recipe.calories    || 0,
-                  protein_g: recipe.protein_g   || 0,
-                  carbs_g:   recipe.carbs_g     || 0,
-                  fat_g:     recipe.total_fat_g || 0,
-                });
-              }
-              await Promise.all([loadFridgeFromDB(), loadNutrition()]);
-              Alert.alert("Logged! ✅", "Meal logged and fridge updated.");
-            } catch (err: any) {
-              console.error("[markCooked] erreur:", err?.message ?? err);
-              Alert.alert("Error", err?.message ?? "Could not log the meal. Try again.");
-            }
-          },
-        },
-      ],
-    );
-  };
+  const executeMarkCooked = useCallback(async (recipe: RecipeDetail) => {
+    if (markingId === recipe.id) return;
+    if (isRecipeCookedToday(recipe, meals)) return;
+
+    setMarkingId(recipe.id);
+    try {
+      let freshDetail: RecipeDetail | null = currentDetail?.id === recipe.id ? currentDetail : null;
+      if (!freshDetail?.all_ingredients?.length) {
+        try {
+          freshDetail = await userService.getRecipeDetail(recipe.id) as RecipeDetail;
+          setCurrentDetail(freshDetail);
+        } catch (e) {
+          console.warn("[markCooked] getRecipeDetail failed:", e);
+        }
+      }
+
+      const freshMissing = new Set(
+        (freshDetail?.missing_ingredients ?? recipe.missing_ingredients ?? [])
+          .map((s: string) => s.toLowerCase()),
+      );
+      const allIngs = freshDetail?.all_ingredients ?? recipe.all_ingredients ?? [];
+      const matched = allIngs.filter((ing: string) => !freshMissing.has(ing.toLowerCase()));
+
+      await userService.markRecipeCooked(recipe.id, matched);
+
+      if (recipe.calories) {
+        logMeal({
+          recipe_id: recipe.id,
+          title:     recipe.title,
+          meal_type: recipe.meal_type || "meal",
+          calories:  recipe.calories    || 0,
+          protein_g: recipe.protein_g   || 0,
+          carbs_g:   recipe.carbs_g     || 0,
+          fat_g:     recipe.total_fat_g || 0,
+        });
+      }
+
+      await Promise.all([loadFromDB(), loadFridgeFromDB(), loadNutrition()]);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not log the meal. Try again.";
+      console.error("[markCooked] error:", message);
+      Alert.alert("Error", message);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    } finally {
+      setMarkingId(null);
+    }
+  }, [currentDetail, loadFromDB, loadFridgeFromDB, loadNutrition, logMeal, markingId, meals]);
+
+  const executeUnmarkCooked = useCallback(async (recipe: RecipeDetail) => {
+    if (markingId === recipe.id) return;
+    setMarkingId(recipe.id);
+    try {
+      await userService.unmarkRecipeCooked(recipe.id);
+      await Promise.all([loadFromDB(), loadFridgeFromDB(), loadNutrition()]);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Could not remove the meal. Try again.";
+      Alert.alert("Error", message);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    } finally {
+      setMarkingId(null);
+    }
+  }, [loadFromDB, loadFridgeFromDB, loadNutrition, markingId]);
+
+  const handleCookToggle = useCallback((recipe: RecipeDetail) => {
+    if (isRecipeCookedToday(recipe, meals)) {
+      Alert.alert(
+        "Remove from today?",
+        `"${recipe.title}" will be removed from today's intake.`,
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Remove", style: "destructive", onPress: () => executeUnmarkCooked(recipe) },
+        ],
+      );
+      return;
+    }
+    executeMarkCooked(recipe);
+  }, [meals, executeMarkCooked, executeUnmarkCooked]);
 
   const cals    = Math.round(totalCalories());
   const protein = Math.round(totalProtein());
   const carbs   = Math.round(totalCarbs());
   const fat     = Math.round(totalFat());
+  const empty   = EMPTY_MESSAGES[activeFilter];
 
   return (
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
         <View className="px-5 pt-14 pb-4">
-          <AppText className="text-[26px] font-bold text-foreground">Liked Recipes ❤️</AppText>
+          <AppText className="text-[26px] font-bold text-foreground">Liked Recipes</AppText>
           <AppText className="text-[15px] text-muted-foreground mt-1">
-            {likedRecipes.length} saved recipe{likedRecipes.length !== 1 ? "s" : ""}
+            Swipe right to log a meal, left to remove — or use the buttons
           </AppText>
         </View>
 
         <View className="px-5 gap-4">
-          {/* Suivi du jour */}
+          <FilterTabs active={activeFilter} counts={filterCounts} onChange={setActiveFilter} />
+
           {meals.length > 0 && (
             <View className="rounded-2xl border p-4 gap-3" style={{ backgroundColor: colors.white, borderColor: colors.border }}>
               <View className="flex-row items-center gap-2">
@@ -584,37 +806,37 @@ export default function LikedScreen() {
             </View>
           )}
 
-          {/* Liste */}
           {loading ? (
             <View className="items-center py-16">
               <ActivityIndicator color={colors.sage} size="large" />
             </View>
-          ) : likedRecipes.length === 0 ? (
+          ) : filteredRecipes.length === 0 ? (
             <View className="items-center py-16 gap-4 px-8">
               <View className="w-16 h-16 rounded-full items-center justify-center" style={{ backgroundColor: colors.sageMuted }}>
-                <Ionicons name="heart-outline" size={32} color={colors.sage} />
+                <Ionicons
+                  name={activeFilter === "liked" ? "heart-outline" : "restaurant-outline"}
+                  size={32}
+                  color={colors.sage}
+                />
               </View>
-              <AppText className="text-[16px] font-semibold text-foreground text-center">No liked recipes yet</AppText>
-              <AppText className="text-[14px] text-muted-foreground text-center">
-                Like a recipe from suggestions to save it here.
-              </AppText>
+              <AppText className="text-[16px] font-semibold text-foreground text-center">{empty.title}</AppText>
+              <AppText className="text-[14px] text-muted-foreground text-center">{empty.subtitle}</AppText>
             </View>
           ) : (
-            <>
-              <AppText className="text-[15px] font-bold text-foreground">
-                All recipes ({likedRecipes.length})
-              </AppText>
-              {likedRecipes.map((r) => (
-                <LikedRecipeCard
-                  key={r.id}
-                  recipe={r as RecipeDetail}
-                  cookedToday={cookedTodayIds.has(String(r.id))}
-                  onUnlike={() => handleUnlike(r as RecipeDetail)}
-                  onMarkCooked={() => handleMarkCooked(r as RecipeDetail)}
-                  onViewDetail={() => { setDetailRecipe(r as RecipeDetail); setDetailVisible(true); }}
-                />
+            <View className="gap-0">
+              {filteredRecipes.map((r) => (
+                <View key={r.id} className="mb-3">
+                  <SwipeableLikedRecipeCard
+                    recipe={r as RecipeDetail}
+                    cookedToday={cookedTodayRecipeIds.has(String(r.id))}
+                    onUnlike={() => handleUnlike(r as RecipeDetail)}
+                    onCookToggle={() => handleCookToggle(r as RecipeDetail)}
+                    onViewDetail={() => { setDetailRecipe(r as RecipeDetail); setDetailVisible(true); }}
+                    onSwipeableOpen={handleSwipeableOpen}
+                  />
+                </View>
               ))}
-            </>
+            </View>
           )}
         </View>
       </ScrollView>

@@ -8,23 +8,22 @@
  */
 
 import { AppText } from "@/components/ui/app-text";
+import { APP_CONFIG } from "@/config/runtime";
 import { colors } from "@/constants/colors";
-import { Ionicons } from "@expo/vector-icons";
-import { useProfileStore } from "@/store/profile-store";
-import { useLikedStore } from "@/store/liked-store";
+import { BASE_URL } from "@/services/api";
 import { userService } from "@/services/userService";
+import { useLikedStore } from "@/store/liked-store";
+import { useProfileStore } from "@/store/profile-store";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Modal,
   Pressable,
   ScrollView,
-  View,
+  View
 } from "react-native";
-import { BASE_URL } from "@/services/api";
-import { APP_CONFIG } from "@/config/runtime";
 
 const API_BASE = BASE_URL;
 
@@ -288,16 +287,29 @@ function FeedbackModal({ recipe, visible, onClose, sessionId }: {
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 bg-black/40" onPress={onClose}>
-        <View className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl px-5 pt-5 pb-10 max-h-[80%]">
-          <View className="flex-row items-center justify-between mb-4">
+      <View className="flex-1 justify-end bg-black/40">
+        <Pressable className="absolute inset-0" onPress={onClose} />
+
+        <View
+          className="bg-background rounded-t-3xl"
+          style={{ maxHeight: "85%" }}
+        >
+          <View className="flex-row items-center justify-between px-5 pt-5 pb-3 border-b" style={{ borderColor: colors.border }}>
             <AppText className="text-[17px] font-bold text-foreground">
               {substitutes.length > 0 ? "Substitutes found" : "Missing ingredients"}
             </AppText>
-            <Pressable onPress={onClose}><Ionicons name="close" size={22} color={colors.mutedText} /></Pressable>
+            <Pressable onPress={onClose}>
+              <Ionicons name="close" size={22} color={colors.mutedText} />
+            </Pressable>
           </View>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={{ flexGrow: 0 }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32 }}
+            showsVerticalScrollIndicator
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
+          >
             {substitutes.length === 0 ? (
               <>
                 <AppText className="text-[14px] text-muted-foreground mb-4">
@@ -313,13 +325,15 @@ function FeedbackModal({ recipe, visible, onClose, sessionId }: {
                 </View>
                 <Pressable onPress={handleSubmit} disabled={submitting} className="rounded-2xl py-4 items-center active:opacity-80" style={{ backgroundColor: colors.sage }}>
                   <AppText className="text-[15px] font-bold text-white">
-                    {submitting ? "Finding substitutes..." : "Find substitutes ✨"}
+                    {submitting ? "Finding substitutes..." : "Find substitutes"}
                   </AppText>
                 </Pressable>
               </>
             ) : (
               <>
-                <AppText className="text-[14px] text-muted-foreground mb-4">Here are substitutes for the missing ingredients:</AppText>
+                <AppText className="text-[14px] text-muted-foreground mb-4">
+                  Here are substitutes for the missing ingredients:
+                </AppText>
                 {substitutes.map((sub, i) => (
                   <View key={i} className="rounded-xl border px-4 py-3 mb-3" style={{ backgroundColor: colors.white, borderColor: colors.border }}>
                     <AppText className="text-[14px] font-semibold text-foreground mb-1">{sub.original}</AppText>
@@ -341,7 +355,7 @@ function FeedbackModal({ recipe, visible, onClose, sessionId }: {
             )}
           </ScrollView>
         </View>
-      </Pressable>
+      </View>
     </Modal>
   );
 }

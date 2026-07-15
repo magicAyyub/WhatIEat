@@ -195,6 +195,10 @@ export const userService = {
     return api.post(`/users/me/recipes/${recipeId}/prepared`, { matched_ingredients });
   },
 
+  async unmarkRecipeCooked(recipeId: number): Promise<void> {
+    await api.delete(`/users/me/recipes/${recipeId}/prepared`);
+  },
+
   // GET /users/me/recipes/preparations?date=YYYY-MM-DD
   async getPreparations(date?: string): Promise<Preparation[]> {
     const qs = date ? `?date=${date}` : "";
