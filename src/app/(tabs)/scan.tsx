@@ -1,19 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Image, Pressable, View } from "react-native";
 
+import { IngredientFormModal } from "@/components/fridge/IngredientFormModal";
 import { CameraCapture } from "@/components/scan/CameraCapture";
 import { DetectionOverlay } from "@/components/scan/DetectionOverlay";
 import { ScanResultPanel } from "@/components/scan/ScanResultPanel";
 import { ScanSettingsModal } from "@/components/scan/ScanSettingsModal";
 import { PREVIEW_SIZE } from "@/helpers/utils/scan";
 import { useScanner } from "@/hooks/useScanner";
+import { userService } from "@/services/userService";
 import { useFridgeStore } from "@/store";
+import { useAuthStore } from "@/store/auth-store";
+import type { Ingredient } from "@/types/ingredient";
 
 export default function ScanScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ imageUri?: string }>();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const [manualFormOpen, setManualFormOpen] = useState(false);
 
   const {
     mode,
@@ -46,27 +52,59 @@ export default function ScanScreen() {
     resetToCamera();
   };
 
-  const handleAddIngredients = async () => {
-    // 1. Sauvegarde locale
-    useFridgeStore.getState().addIngredients(scannedIngredients);
+  const handleAddIngredients = async (selected: typeof scannedIngredients) => {
+    if (selected.length === 0) return;
 
-    // 2. Sauvegarde en DB
+    useFridgeStore.getState().addIngredients(selected);
+
     try {
-      const { userService } = await import("@/services/userService");
-      const items = scannedIngredients.map((ing) => ({
-        ingredient_name: ing.name,
-        quantity:        parseFloat(ing.quantity ?? "1") || 1,
-        unit:            (ing.quantity ?? "").replace(/^[0-9.]+\s*/, "").trim() || "pieces",
-        expires_at:      ing.expiresAt ?? undefined,
-        category:        ing.category ?? undefined,
-      }));
-      await userService.syncFridgeToDB(scannedIngredients);
+      await userService.syncFridgeToDB(selected);
     } catch (e) {
       console.warn("Sauvegarde DB scan échouée:", e);
     }
 
     router.replace("/(tabs)/frigo");
   };
+
+  const handleManualSave = async (ingredient: Ingredient) => {
+    useFridgeStore.getState().addIngredients([ingredient]);
+
+    if (isAuthenticated) {
+      try {
+        const qty = parseFloat(ingredient.quantity ?? "1") || 1;
+        const unit =
+          (ingredient.quantity ?? "").replace(/^[0-9.]+\s*/, "").trim() || "pieces";
+        await userService.addFridgeItem({
+          ingredient_name: ingredient.name,
+          quantity: qty,
+          unit,
+          expires_at: ingredient.expiresAt,
+          category: ingredient.category,
+        });
+      } catch (e) {
+        console.warn("Add DB échoué:", e);
+      }
+    }
+
+    router.replace("/(tabs)/frigo");
+  };
+
+  const handleClose = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/(tabs)/frigo");
+    }
+  };
+
+  const closeButton = (
+    <Pressable
+      className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
+      onPress={handleClose}
+    >
+      <Ionicons name="close" size={24} color="white" />
+    </Pressable>
+  );
 
   const settingsButton = (
     <Pressable
@@ -100,6 +138,7 @@ export default function ScanScreen() {
       <View className="flex-1 bg-black">
         <CameraCapture
           onCapture={handleCapture}
+          topLeftOverlay={closeButton}
           topRightOverlay={settingsButton}
         />
         {settingsModal}
@@ -113,9 +152,9 @@ export default function ScanScreen() {
         <View className="mb-3 w-full max-h-77.5 flex-row items-center justify-between">
           <Pressable
             className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
-            onPress={handleReset}
+            onPress={handleClose}
           >
-            <Ionicons name="arrow-back" size={22} color="white" />
+            <Ionicons name="close" size={24} color="white" />
           </Pressable>
           {settingsButton}
         </View>
@@ -146,6 +185,13 @@ export default function ScanScreen() {
         confidenceText={confidenceText}
         onScanAnother={handleReset}
         onAddIngredients={handleAddIngredients}
+        onAddManually={() => setManualFormOpen(true)}
+      />
+
+      <IngredientFormModal
+        visible={manualFormOpen}
+        onClose={() => setManualFormOpen(false)}
+        onSave={handleManualSave}
       />
 
       {settingsModal}

@@ -31,7 +31,13 @@ export default function TabLayout() {
       <Tabs.Screen name="recipes" options={{ title: "Recipes", tabBarIcon: ({ focused }) => <TabBarIcon name="restaurant-outline" focused={focused} /> }} />
       <Tabs.Screen name="liked"   options={{ title: "Liked",   tabBarIcon: ({ focused }) => <TabBarIcon name="heart-outline"      focused={focused} /> }} />
       <Tabs.Screen name="profile" options={{ title: "Profile", tabBarIcon: ({ focused }) => <TabBarIcon name="person-outline"     focused={focused} /> }} />
-      <Tabs.Screen name="scan"    options={{ href: null }} />
+      <Tabs.Screen
+        name="scan"
+        options={{
+          href: null,
+          tabBarStyle: { display: "none" },
+        }}
+      />
     </Tabs>
   );
 }

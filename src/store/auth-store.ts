@@ -9,6 +9,7 @@ import { userService } from "@/services/userService";
 import { useProfileStore } from "./profile-store";
 import { useFridgeStore } from "./index";
 import { useNutritionStore } from "./nutrition-store";
+import { resolveIngredientIcon } from "@/helpers/utils/icons";
 
 type AuthStore = {
   token:            string | null;
@@ -42,7 +43,7 @@ export const useAuthStore = create<AuthStore>()(
                 ? `${item.quantity} ${item.unit}`
                 : String(item.quantity),
               expiresAt: item.expires_at ?? undefined,
-              icon:      "food-variant",
+              icon:      resolveIngredientIcon(item.ingredient_name),
               category:  item.category ?? "Other",
             }));
             useFridgeStore.getState().setIngredients(ingredients);

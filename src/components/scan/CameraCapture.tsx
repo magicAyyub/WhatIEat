@@ -5,10 +5,11 @@ import { Animated, Pressable, View } from "react-native";
 
 type Props = {
   onCapture: (imageUri: string) => void;
+  topLeftOverlay?: ReactNode;
   topRightOverlay?: ReactNode;
 };
 
-export function CameraCapture({ onCapture, topRightOverlay }: Props) {
+export function CameraCapture({ onCapture, topLeftOverlay, topRightOverlay }: Props) {
   const cameraRef = useRef<CameraView | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [capturing, setCapturing] = useState(false);
@@ -43,6 +44,9 @@ export function CameraCapture({ onCapture, topRightOverlay }: Props) {
   if (!permission) {
     return (
       <View className="flex-1 items-center justify-center bg-black px-6">
+        {topLeftOverlay ? (
+          <View className="absolute left-4 top-14">{topLeftOverlay}</View>
+        ) : null}
         <AppText className="text-white text-center">Loading camera permission...</AppText>
       </View>
     );
@@ -51,6 +55,9 @@ export function CameraCapture({ onCapture, topRightOverlay }: Props) {
   if (!permission.granted) {
     return (
       <View className="flex-1 items-center justify-center bg-black px-6 gap-4">
+        {topLeftOverlay ? (
+          <View className="absolute left-4 top-14">{topLeftOverlay}</View>
+        ) : null}
         <AppText className="text-white text-center">
           Camera access is needed to scan your fridge.
         </AppText>
@@ -73,8 +80,11 @@ export function CameraCapture({ onCapture, topRightOverlay }: Props) {
         ratio="16:9"
       />
 
-      {topRightOverlay ? (
-        <View className="absolute right-4 top-14">{topRightOverlay}</View>
+      {(topLeftOverlay || topRightOverlay) ? (
+        <View className="absolute left-4 right-4 top-14 flex-row items-center justify-between">
+          <View>{topLeftOverlay}</View>
+          <View>{topRightOverlay}</View>
+        </View>
       ) : null}
 
       <View className="absolute inset-0 items-center justify-center">

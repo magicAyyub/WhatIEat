@@ -2,7 +2,7 @@ import { AppText } from "@/components/ui/app-text";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "@/constants/colors";
 import { Pressable, View } from "react-native";
-import { getSafeIconName } from "@/helpers/utils/icons";
+import { resolveIngredientIcon } from "@/helpers/utils/icons";
 
 export type ExpiringItem = {
   name: string;
@@ -38,7 +38,7 @@ export function ExpiringItemRow({ item, onPress }: ExpiringItemRowProps) {
       <View className="flex-row items-center gap-3.5 flex-1">
         <View className="w-10 h-10 rounded-xl items-center justify-center bg-zinc-50 border border-zinc-100">
           <MaterialCommunityIcons
-            name={getSafeIconName(item.icon) as any}
+            name={resolveIngredientIcon(item.name, item.icon) as any}
             size={22}
             color={colors.sage}
           />

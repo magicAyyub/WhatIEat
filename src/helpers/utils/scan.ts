@@ -2,6 +2,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { Image as RNImage } from "react-native";
 
 import type { Detection, Ingredient } from "@/types/ingredient";
+import { getIconForFoodClass } from "@/helpers/utils/icons";
 
 export const MODEL_IMAGE_SIZE = 512;
 export const PREVIEW_SIZE = 340;
@@ -58,46 +59,40 @@ export function scalePolygon(points: [number, number][]) {
 
 export const INGREDIENT_MAP: Record<
   string,
-  { displayName: string; icon: string; category: string; defaultExpiryDays: number }
+  { displayName: string; category: string }
 > = {
-  apple: { displayName: "Apples", icon: "food-apple", category: "Fruits", defaultExpiryDays: 7 },
-  banana: { displayName: "Bananas", icon: "food-variant", category: "Fruits", defaultExpiryDays: 3 },
-  cabbage: { displayName: "Cabbage", icon: "leaf", category: "Vegetables", defaultExpiryDays: 7 },
-  carrot: { displayName: "Carrots", icon: "carrot", category: "Vegetables", defaultExpiryDays: 10 },
-  cucumber: { displayName: "Cucumber", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
-  date: { displayName: "Dates", icon: "food-variant", category: "Fruits", defaultExpiryDays: 30 },
-  eggplant: { displayName: "Eggplant", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
-  eggs: { displayName: "Eggs", icon: "egg", category: "Protein", defaultExpiryDays: 14 },
-  garlic: { displayName: "Garlic", icon: "garlic", category: "Vegetables", defaultExpiryDays: 30 },
-  lemon: { displayName: "Lemon", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 14 },
-  lettuce: { displayName: "Lettuce", icon: "leaf", category: "Vegetables", defaultExpiryDays: 4 },
-  okra: { displayName: "Okra", icon: "food-variant", category: "Vegetables", defaultExpiryDays: 5 },
-  onion: { displayName: "Onion", icon: "onion", category: "Vegetables", defaultExpiryDays: 30 },
-  orange: { displayName: "Orange", icon: "fruit-citrus", category: "Fruits", defaultExpiryDays: 10 },
-  potato: { displayName: "Potatoes", icon: "potato", category: "Vegetables", defaultExpiryDays: 30 },
-  tomato: { displayName: "Tomatoes", icon: "fruit-cherries", category: "Vegetables", defaultExpiryDays: 4 },
-  butter: { displayName: "Butter", icon: "butter", category: "Dairy", defaultExpiryDays: 21 },
-  cheese: { displayName: "Cheese", icon: "cheese", category: "Dairy", defaultExpiryDays: 14 },
-  milk: { displayName: "Milk", icon: "glass-milk", category: "Dairy", defaultExpiryDays: 7 },
-  yogurt: { displayName: "Greek yogurt", icon: "cup", category: "Dairy", defaultExpiryDays: 10 },
-  bread: { displayName: "Bread", icon: "bread-slice", category: "Grains", defaultExpiryDays: 3 },
-  beans: { displayName: "Beans", icon: "sprout", category: "Vegetables", defaultExpiryDays: 5 },
-  beef: { displayName: "Beef", icon: "food-steak", category: "Protein", defaultExpiryDays: 3 },
-  bulgur: { displayName: "Bulgur", icon: "barley", category: "Grains", defaultExpiryDays: 90 },
-  chicken: { displayName: "Chicken", icon: "food-drumstick", category: "Protein", defaultExpiryDays: 3 },
-  chickpea: { displayName: "Chickpeas", icon: "sprout", category: "Vegetables", defaultExpiryDays: 5 },
-  fish: { displayName: "Fish", icon: "fish", category: "Protein", defaultExpiryDays: 2 },
-  lamb: { displayName: "Lamb", icon: "food-steak", category: "Protein", defaultExpiryDays: 3 },
-  lentil: { displayName: "Lentils", icon: "barley", category: "Grains", defaultExpiryDays: 90 },
-  rice: { displayName: "Basmati rice", icon: "rice", category: "Grains", defaultExpiryDays: 90 },
-  spinach: { displayName: "Spinach", icon: "leaf", category: "Vegetables", defaultExpiryDays: 3 },
+  apple:    { displayName: "Apples",       category: "Fruits"     },
+  banana:   { displayName: "Bananas",      category: "Fruits"     },
+  cabbage:  { displayName: "Cabbage",      category: "Vegetables" },
+  carrot:   { displayName: "Carrots",      category: "Vegetables" },
+  cucumber: { displayName: "Cucumber",     category: "Vegetables" },
+  date:     { displayName: "Dates",        category: "Fruits"     },
+  eggplant: { displayName: "Eggplant",     category: "Vegetables" },
+  eggs:     { displayName: "Eggs",         category: "Protein"    },
+  garlic:   { displayName: "Garlic",       category: "Vegetables" },
+  lemon:    { displayName: "Lemon",        category: "Fruits"     },
+  lettuce:  { displayName: "Lettuce",      category: "Vegetables" },
+  okra:     { displayName: "Okra",         category: "Vegetables" },
+  onion:    { displayName: "Onion",        category: "Vegetables" },
+  orange:   { displayName: "Orange",       category: "Fruits"     },
+  potato:   { displayName: "Potatoes",     category: "Vegetables" },
+  tomato:   { displayName: "Tomatoes",     category: "Vegetables" },
+  butter:   { displayName: "Butter",       category: "Dairy"      },
+  cheese:   { displayName: "Cheese",       category: "Dairy"      },
+  milk:     { displayName: "Milk",         category: "Dairy"      },
+  yogurt:   { displayName: "Greek yogurt", category: "Dairy"      },
+  bread:    { displayName: "Bread",        category: "Other"      },
+  beans:    { displayName: "Beans",        category: "Vegetables" },
+  beef:     { displayName: "Beef",         category: "Protein"    },
+  bulgur:   { displayName: "Bulgur",       category: "Other"      },
+  chicken:  { displayName: "Chicken",      category: "Protein"    },
+  chickpea: { displayName: "Chickpeas",    category: "Vegetables" },
+  fish:     { displayName: "Fish",         category: "Protein"    },
+  lamb:     { displayName: "Lamb",         category: "Protein"    },
+  lentil:   { displayName: "Lentils",      category: "Other"      },
+  rice:     { displayName: "Basmati rice", category: "Other"      },
+  spinach:  { displayName: "Spinach",      category: "Vegetables" },
 };
-
-export function getExpiryDateString(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return date.toISOString().split("T")[0];
-}
 
 export function mapScanToIngredient(raw: {
   id: string;
@@ -105,14 +100,13 @@ export function mapScanToIngredient(raw: {
   quantity?: string;
   unit?: string;
 }): Ingredient {
-  const meta = INGREDIENT_MAP[raw.id.toLowerCase()];
-  
-  const name = meta ? meta.displayName : raw.name;
-  const icon = meta ? meta.icon : "food-variant";
-  const category = meta ? meta.category : "Other";
-  // Pas de date d'expiration par défaut — l'utilisateur la saisit manuellement
+  const classId = raw.id.toLowerCase();
+  const meta = INGREDIENT_MAP[classId];
 
-  // Format quantity
+  const name = meta ? meta.displayName : raw.name;
+  const icon = getIconForFoodClass(classId);
+  const category = meta ? meta.category : "Other";
+
   let displayQuantity = raw.quantity || "1";
   if (raw.unit === "count" || raw.unit === "pack") {
     const count = parseInt(displayQuantity, 10);
@@ -130,7 +124,7 @@ export function mapScanToIngredient(raw: {
     name,
     quantity: displayQuantity,
     unit: raw.unit,
-    expiresAt: undefined,   // pas de date par défaut après scan
+    expiresAt: undefined,
     icon,
     category,
   };
