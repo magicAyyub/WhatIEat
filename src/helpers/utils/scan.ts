@@ -110,8 +110,7 @@ export function mapScanToIngredient(raw: {
   const name = meta ? meta.displayName : raw.name;
   const icon = meta ? meta.icon : "food-variant";
   const category = meta ? meta.category : "Other";
-  const defaultExpiryDays = meta ? meta.defaultExpiryDays : 7;
-  const expiresAt = getExpiryDateString(defaultExpiryDays);
+  // Pas de date d'expiration par défaut — l'utilisateur la saisit manuellement
 
   // Format quantity
   let displayQuantity = raw.quantity || "1";
@@ -131,7 +130,7 @@ export function mapScanToIngredient(raw: {
     name,
     quantity: displayQuantity,
     unit: raw.unit,
-    expiresAt,
+    expiresAt: undefined,   // pas de date par défaut après scan
     icon,
     category,
   };

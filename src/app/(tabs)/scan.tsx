@@ -46,8 +46,25 @@ export default function ScanScreen() {
     resetToCamera();
   };
 
-  const handleAddIngredients = () => {
+  const handleAddIngredients = async () => {
+    // 1. Sauvegarde locale
     useFridgeStore.getState().addIngredients(scannedIngredients);
+
+    // 2. Sauvegarde en DB
+    try {
+      const { userService } = await import("@/services/userService");
+      const items = scannedIngredients.map((ing) => ({
+        ingredient_name: ing.name,
+        quantity:        parseFloat(ing.quantity ?? "1") || 1,
+        unit:            (ing.quantity ?? "").replace(/^[0-9.]+\s*/, "").trim() || "pieces",
+        expires_at:      ing.expiresAt ?? undefined,
+        category:        ing.category ?? undefined,
+      }));
+      await userService.syncFridgeToDB(scannedIngredients);
+    } catch (e) {
+      console.warn("Sauvegarde DB scan échouée:", e);
+    }
+
     router.replace("/(tabs)/frigo");
   };
 
