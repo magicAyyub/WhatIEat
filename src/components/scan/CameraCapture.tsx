@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { AppText } from "@/components/ui/app-text";
 import { Animated, Pressable, View } from "react-native";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 
 type Props = {
   onCapture: (imageUri: string) => void;
@@ -14,6 +15,7 @@ export function CameraCapture({ onCapture, topLeftOverlay, topRightOverlay }: Pr
   const [permission, requestPermission] = useCameraPermissions();
   const [capturing, setCapturing] = useState(false);
   const pulse = useRef(new Animated.Value(0)).current;
+  const topPadding = useScreenTopPadding();
 
   useEffect(() => {
     const anim = Animated.loop(
@@ -45,7 +47,7 @@ export function CameraCapture({ onCapture, topLeftOverlay, topRightOverlay }: Pr
     return (
       <View className="flex-1 items-center justify-center bg-black px-6">
         {topLeftOverlay ? (
-          <View className="absolute left-4 top-14">{topLeftOverlay}</View>
+          <View className="absolute left-4" style={{ top: topPadding }}>{topLeftOverlay}</View>
         ) : null}
         <AppText className="text-white text-center">Loading camera permission...</AppText>
       </View>
@@ -56,7 +58,7 @@ export function CameraCapture({ onCapture, topLeftOverlay, topRightOverlay }: Pr
     return (
       <View className="flex-1 items-center justify-center bg-black px-6 gap-4">
         {topLeftOverlay ? (
-          <View className="absolute left-4 top-14">{topLeftOverlay}</View>
+          <View className="absolute left-4" style={{ top: topPadding }}>{topLeftOverlay}</View>
         ) : null}
         <AppText className="text-white text-center">
           Camera access is needed to scan your fridge.
@@ -81,7 +83,10 @@ export function CameraCapture({ onCapture, topLeftOverlay, topRightOverlay }: Pr
       />
 
       {(topLeftOverlay || topRightOverlay) ? (
-        <View className="absolute left-4 right-4 top-14 flex-row items-center justify-between">
+        <View
+          className="absolute left-4 right-4 flex-row items-center justify-between"
+          style={{ top: topPadding }}
+        >
           <View>{topLeftOverlay}</View>
           <View>{topRightOverlay}</View>
         </View>

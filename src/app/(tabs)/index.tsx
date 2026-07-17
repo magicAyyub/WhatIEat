@@ -14,6 +14,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Circle } from "react-native-svg";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 
 const DEFAULT_CALORIE_TARGET = 2100;
 
@@ -128,6 +129,7 @@ export default function HomeScreen() {
   const { profile } = useProfileStore();
   const ingredients = useFridgeStore((s) => s.ingredients);
   const nutrition   = useNutritionStore();
+  const topPadding  = useScreenTopPadding();
 
   // Recharge les repas depuis la DB à chaque mount
   useEffect(() => {
@@ -162,7 +164,7 @@ export default function HomeScreen() {
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
 
         {/* Header */}
-        <View className="px-5 pt-14 pb-5">
+        <View className="px-5 pb-5" style={{ paddingTop: topPadding }}>
           <View className="flex-row justify-between items-center">
             <View className="flex-1 pr-3">
               <View className="flex-row items-center gap-1.5 mb-1">
@@ -189,7 +191,7 @@ export default function HomeScreen() {
             {/* Calories */}
             <View className="px-4 pt-4 pb-3">
               <View className="flex-row justify-between items-center mb-2">
-                <AppText className="text-[13px] font-semibold text-muted-foreground">CALORIES — TODAY</AppText>
+                <AppText className="text-[13px] font-semibold text-muted-foreground">CALORIES TODAY</AppText>
                 <AppText className="text-[13px] text-muted-foreground">Goal: {calorieTarget} kcal</AppText>
               </View>
 

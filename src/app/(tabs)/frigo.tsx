@@ -28,6 +28,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { userService } from "@/services/userService";
 import type { Ingredient } from "@/types/ingredient";
 import { resolveIngredientIcon } from "@/helpers/utils/icons";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 import { BASE_URL } from "@/services/api";
 
 const API_BASE = BASE_URL;
@@ -221,6 +222,7 @@ export default function FrigoScreen() {
   const setIngredients      = useFridgeStore((s) => s.setIngredients);
   const { profile }         = useProfileStore();
   const { isAuthenticated } = useAuthStore();
+  const topPadding          = useScreenTopPadding();
 
   // Sync initial supprimé — le frigo est chargé depuis la DB au login
   // via auth-store.loadFridgeFromDB()
@@ -379,7 +381,7 @@ export default function FrigoScreen() {
   return (
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: topPadding }}>
           <View className="flex-row justify-between items-start">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">My Fridge</AppText>
@@ -418,7 +420,7 @@ export default function FrigoScreen() {
               <View className="flex-row items-center gap-1.5 mb-3">
                 <Ionicons name="warning" size={16} color={colors.destructive} />
                 <AppText className="text-[14px] font-bold" style={{ color: colors.destructive }}>
-                  Expiring soon — prioritized in suggestions
+                  Expiring soon, prioritized in suggestions
                 </AppText>
               </View>
               {expiringSoon.map((item) => (

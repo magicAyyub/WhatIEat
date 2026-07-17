@@ -21,6 +21,7 @@ import {
   View,
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 
 const MEAL_EMOJI: Record<string, string> = {
   breakfast: "☀️", lunch: "🥗", dinner: "🌙", snack: "🍎",
@@ -621,6 +622,7 @@ export default function LikedScreen() {
           totalCalories, totalProtein, totalCarbs, totalFat, meals } = useNutritionStore();
   const { loadFridgeFromDB }                                         = useAuthStore();
   const ingredients                                                   = useFridgeStore((s) => s.ingredients);
+  const topPadding                                                    = useScreenTopPadding();
 
   const [loading,       setLoading]       = useState(true);
   const [activeFilter,  setActiveFilter]  = useState<FilterTab>("liked");
@@ -762,10 +764,10 @@ export default function LikedScreen() {
   return (
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: topPadding }}>
           <AppText className="text-[26px] font-bold text-foreground">Liked Recipes</AppText>
           <AppText className="text-[15px] text-muted-foreground mt-1">
-            Swipe right to log a meal, left to remove — or use the buttons
+            Swipe right to log a meal, left to remove, or use the buttons
           </AppText>
         </View>
 

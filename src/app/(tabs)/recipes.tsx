@@ -24,6 +24,7 @@ import {
   ScrollView,
   View
 } from "react-native";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 
 const API_BASE = BASE_URL;
 
@@ -377,6 +378,7 @@ export default function RecipesScreen() {
   const [recipes,         setRecipes]         = useState<ApiRecipe[]>([]);
   const [mealLabel,       setMealLabel]       = useState("Recipes 🍽️");
   const [feedbackRecipe,  setFeedbackRecipe]  = useState<ApiRecipe | null>(null);
+  const topPadding                            = useScreenTopPadding();
 
   // Recharge les recettes quand les params changent
   useEffect(() => {
@@ -427,7 +429,7 @@ export default function RecipesScreen() {
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: topPadding }}>
           <View className="flex-row justify-between items-center">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">

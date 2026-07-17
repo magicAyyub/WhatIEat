@@ -10,6 +10,7 @@ import { ScanResultPanel } from "@/components/scan/ScanResultPanel";
 import { ScanSettingsModal } from "@/components/scan/ScanSettingsModal";
 import { PREVIEW_SIZE } from "@/helpers/utils/scan";
 import { useScanner } from "@/hooks/useScanner";
+import { useScreenTopPadding } from "@/hooks/useScreenTopPadding";
 import { userService } from "@/services/userService";
 import { useFridgeStore } from "@/store";
 import { useAuthStore } from "@/store/auth-store";
@@ -20,6 +21,7 @@ export default function ScanScreen() {
   const params = useLocalSearchParams<{ imageUri?: string }>();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [manualFormOpen, setManualFormOpen] = useState(false);
+  const topPadding = useScreenTopPadding();
 
   const {
     mode,
@@ -148,7 +150,7 @@ export default function ScanScreen() {
 
   return (
     <View className="flex-1 bg-black">
-      <View className="flex-1 items-center justify-start px-4 pt-14">
+      <View className="flex-1 items-center justify-start px-4" style={{ paddingTop: topPadding }}>
         <View className="mb-3 w-full max-h-77.5 flex-row items-center justify-between">
           <Pressable
             className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
