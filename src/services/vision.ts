@@ -39,7 +39,7 @@ export async function uploadFridgeImage(
     headers: APP_CONFIG.apiKey ? {
       "X-API-Key": APP_CONFIG.apiKey,
     } : {},
-    // Do NOT set Content-Type here — fetch sets it automatically with the boundary
+    // Do NOT set Content-Type here: fetch sets it automatically with the boundary
   });
 
   if (!response.ok) {

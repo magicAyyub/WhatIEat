@@ -13,4 +13,5 @@ export const colors = {
   white: "#FFFFFF",
   tagGreen: "#DCFCE7",
   tagBlue: "#DBEAFE",
+  foreground: "#111827",
 } as const;

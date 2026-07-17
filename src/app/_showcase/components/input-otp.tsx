@@ -112,7 +112,7 @@ const WithPlaceholderOTPContent = () => {
           variant="secondary"
           maxLength={6}
           onComplete={onComplete}
-          placeholder="——————"
+          placeholder="••••••"
         >
           <InputOTP.Group>
             {({ slots }) => (
@@ -295,7 +295,7 @@ const CustomStylesOTPContent = () => {
       <InputOTP
         ref={ref}
         maxLength={6}
-        placeholder="——————"
+        placeholder="••••••"
         onComplete={onComplete}
         className="w-full py-4 gap-8 rounded-3xl items-center justify-center bg-surface shadow-surface"
         style={{

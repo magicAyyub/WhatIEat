@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Image, Pressable, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 import { CameraCapture } from "@/components/scan/CameraCapture";
 import { DetectionOverlay } from "@/components/scan/DetectionOverlay";
@@ -14,6 +16,8 @@ import { useFridgeStore } from "@/store";
 export default function ScanScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ imageUri?: string }>();
+  const insets = useSafeAreaInsets();
+
 
   const {
     mode,
@@ -109,8 +113,9 @@ export default function ScanScreen() {
 
   return (
     <View className="flex-1 bg-black">
-      <View className="flex-1 items-center justify-start px-4 pt-14">
+      <View className="flex-1 items-center justify-start px-4" style={{ paddingTop: insets.top + 16 }}>
         <View className="mb-3 w-full max-h-77.5 flex-row items-center justify-between">
+
           <Pressable
             className="h-11 w-11 items-center justify-center rounded-full bg-black/45"
             onPress={handleReset}

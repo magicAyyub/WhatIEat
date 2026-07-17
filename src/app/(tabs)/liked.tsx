@@ -12,6 +12,7 @@ import { useNutritionStore, type MealLog } from "@/store/nutrition-store";
 import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
@@ -20,6 +21,7 @@ import {
   ScrollView,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Swipeable } from "react-native-gesture-handler";
 
 const MEAL_EMOJI: Record<string, string> = {
@@ -83,7 +85,7 @@ function RecipeDetailModal({
       })
       .catch((e) => {
         console.warn("[RecipeDetail] getRecipeDetail échoué:", e);
-        // Pas d'erreur bloquante — on utilise les données du store local
+        // Pas d'erreur bloquante : on utilise les données du store local
         setDetail(null);
       })
       .finally(() => setLoading(false));
@@ -143,7 +145,7 @@ function RecipeDetailModal({
   };
 
   // Compte précis basé sur les vraies données
-  const ownedCount = allIngredients.filter((ing) => getStatus(ing) === "owned").length;
+  const ownedCount = allIngredients.filter((ing: string) => getStatus(ing) === "owned").length;
 
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
@@ -233,7 +235,7 @@ function RecipeDetailModal({
                         style={{ borderRightWidth: i < 2 ? 1 : 0, borderRightColor: colors.border }}
                       >
                         <AppText className="text-[15px] font-bold" style={{ color: m.color }}>
-                          {m.value ? `${Math.round(m.value)}g` : "—"}
+                          {m.value ? `${Math.round(m.value)}g` : "0g"}
                         </AppText>
                         <AppText className="text-[11px] text-muted-foreground mt-0.5">{m.label}</AppText>
                       </View>
@@ -270,7 +272,7 @@ function RecipeDetailModal({
                     </View>
 
                     <View className="gap-2">
-                      {allIngredients.map((ing, i) => {
+                      {allIngredients.map((ing: string, i: number) => {
                         const status = getStatus(ing);
                         const iconName =
                           status === "owned"   ? "checkmark-circle" :
@@ -321,7 +323,7 @@ function RecipeDetailModal({
                     <AppText className="text-[15px] font-bold text-foreground mb-3">
                       Preparation ({steps.length} steps)
                     </AppText>
-                    {steps.map((s, i) => (
+                    {steps.map((s: any, i: number) => (
                       <View key={`step_${s.step ?? i}`} className="flex-row gap-3 mb-4">
                         <View
                           className="w-7 h-7 rounded-full items-center justify-center shrink-0 mt-0.5"
@@ -621,6 +623,7 @@ export default function LikedScreen() {
           totalCalories, totalProtein, totalCarbs, totalFat, meals } = useNutritionStore();
   const { loadFridgeFromDB }                                         = useAuthStore();
   const ingredients                                                   = useFridgeStore((s) => s.ingredients);
+  const insets                                                        = useSafeAreaInsets();
 
   const [loading,       setLoading]       = useState(true);
   const [activeFilter,  setActiveFilter]  = useState<FilterTab>("liked");
@@ -762,12 +765,13 @@ export default function LikedScreen() {
   return (
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: insets.top + 16 }}>
           <AppText className="text-[26px] font-bold text-foreground">Liked Recipes</AppText>
           <AppText className="text-[15px] text-muted-foreground mt-1">
-            Swipe right to log a meal, left to remove — or use the buttons
+            Swipe right to log a meal, left to remove, or use the buttons
           </AppText>
         </View>
+
 
         <View className="px-5 gap-4">
           <FilterTabs active={activeFilter} counts={filterCounts} onChange={setActiveFilter} />

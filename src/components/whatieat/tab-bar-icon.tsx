@@ -7,6 +7,7 @@ type TabIconName =
   | "cube-outline"
   | "restaurant-outline"
   | "cart-outline"
+  | "heart-outline"
   | "person-outline";
 
 type TabBarIconProps = {

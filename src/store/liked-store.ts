@@ -1,7 +1,7 @@
 /**
  * store/liked-store.ts
  * ─────────────────────
- * Recettes likées — cache local + sync NeonDB.
+ * Recettes likées : cache local + sync NeonDB.
  */
 
 import { create } from "zustand";

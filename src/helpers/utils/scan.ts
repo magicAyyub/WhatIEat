@@ -110,7 +110,7 @@ export function mapScanToIngredient(raw: {
   const name = meta ? meta.displayName : raw.name;
   const icon = meta ? meta.icon : "food-variant";
   const category = meta ? meta.category : "Other";
-  // Pas de date d'expiration par défaut — l'utilisateur la saisit manuellement
+  // Pas de date d'expiration par défaut : l'utilisateur la saisit manuellement
 
   // Format quantity
   let displayQuantity = raw.quantity || "1";

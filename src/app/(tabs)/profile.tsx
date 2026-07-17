@@ -13,6 +13,7 @@ import { useLikedStore } from "@/store/liked-store";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Alert, Pressable, ScrollView, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const macroSegments = [
   { label: "Protein", grams: "140g", percent: "27%", color: colors.macroProtein, flex: 0.27 },
@@ -25,6 +26,7 @@ export default function ProfileScreen() {
   const { profile }      = useProfileStore();
   const { logout }       = useAuthStore();
   const { likedRecipes } = useLikedStore();
+  const insets           = useSafeAreaInsets();
 
   const initial           = profile.firstName.trim().charAt(0).toUpperCase() || "A";
   const allergiesSubtitle = profile.dietaryRestrictions.length > 0
@@ -54,8 +56,9 @@ export default function ProfileScreen() {
   return (
     <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
       {/* Avatar */}
-      <Pressable className="px-5 pt-14 pb-6 active:opacity-90" onPress={() => openEdit(0)}>
+      <Pressable className="px-5 pb-6 active:opacity-90" onPress={() => openEdit(0)} style={{ paddingTop: insets.top + 16 }}>
         <View className="flex-row items-center gap-4">
+
           <View className="w-16 h-16 rounded-full items-center justify-center" style={{ backgroundColor: colors.sage }}>
             <AppText className="text-[28px] font-bold text-white">{initial}</AppText>
           </View>

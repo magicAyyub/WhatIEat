@@ -1,7 +1,7 @@
 /**
  * store/profile-store.ts
  * ───────────────────────
- * Profil utilisateur — sync automatique vers NeonDB.
+ * Profil utilisateur : sync automatique vers NeonDB.
  */
 
 import { defaultUserProfile, type UserProfile } from "@/types/profile";

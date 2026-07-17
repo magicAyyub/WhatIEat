@@ -17,6 +17,7 @@ import { useProfileStore } from "@/store/profile-store";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Alert,
   Modal,
@@ -147,7 +148,7 @@ function RecipeCard({
               ].map((m, i) => (
                 <View key={m.label} className="flex-1 items-center py-2.5" style={{ borderRightWidth: i < 2 ? 1 : 0, borderRightColor: colors.border }}>
                   <AppText className="text-[15px] font-bold" style={{ color: m.color }}>
-                    {m.value ? `${Math.round(m.value)}g` : "—"}
+                    {m.value ? `${Math.round(m.value)}g` : "0g"}
                   </AppText>
                   <AppText className="text-[11px] text-muted-foreground mt-0.5">{m.label}</AppText>
                 </View>
@@ -366,6 +367,7 @@ export default function RecipesScreen() {
   const { profile }                                   = useProfileStore();
   const { likeRecipe, unlikeRecipe, isLiked, likedRecipes } = useLikedStore();
   const router                                        = useRouter();
+  const insets                                        = useSafeAreaInsets();
   const params = useLocalSearchParams<{
     apiResults?: string;
     mealType?:   string;
@@ -427,7 +429,7 @@ export default function RecipesScreen() {
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: insets.top + 16 }}>
           <View className="flex-row justify-between items-center">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">

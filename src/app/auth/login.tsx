@@ -20,6 +20,8 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -32,6 +34,9 @@ export default function LoginScreen() {
   const [password, setPassword]   = useState("");
   const [firstName, setFirstName] = useState("");
   const [loading, setLoading]     = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) {
@@ -96,36 +101,59 @@ export default function LoginScreen() {
       style={{ backgroundColor: colors.cream }}
     >
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, justifyContent: "center", padding: 24 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          paddingHorizontal: 24,
+          paddingTop: Math.max(insets.top, 24) + 12,
+          paddingBottom: Math.max(insets.bottom, 24) + 12,
+        }}
         keyboardShouldPersistTaps="handled"
       >
         {/* Logo */}
-        <View className="items-center mb-10">
+        <View className="items-center mb-8">
           <View
-            className="w-16 h-16 rounded-2xl items-center justify-center mb-4"
-            style={{ backgroundColor: colors.sage }}
+            className="w-16 h-16 rounded-3xl items-center justify-center mb-4 shadow-sm"
+            style={{
+              backgroundColor: colors.sageMuted,
+              shadowColor: colors.sage,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 6,
+              elevation: 2,
+            }}
           >
-            <AppText className="text-3xl">🥗</AppText>
+            <Ionicons name="restaurant-outline" size={32} color={colors.sage} />
           </View>
-          <AppText className="text-[28px] font-bold text-foreground">WhatIEat</AppText>
-          <AppText className="text-[15px] text-muted-foreground mt-1">
-            {mode === "login" ? "Connexion à ton compte" : "Crée ton compte"}
+          <AppText className="text-[32px] font-bold text-foreground tracking-tight" style={{ fontFamily: "Inter_700Bold" }}>
+            WhatIEat
+          </AppText>
+          <AppText className="text-[15px] text-muted-foreground mt-1.5 text-center">
+            {mode === "login" ? "Heureux de te revoir !" : "Rejoins-nous pour mieux manger"}
           </AppText>
         </View>
 
         {/* Formulaire */}
         <View
-          className="rounded-2xl border p-5 gap-3"
-          style={{ backgroundColor: colors.white, borderColor: colors.border }}
+          className="rounded-3xl border p-6 gap-4"
+          style={{
+            backgroundColor: colors.white,
+            borderColor: colors.border,
+            shadowColor: "#000000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.04,
+            shadowRadius: 16,
+            elevation: 3,
+          }}
         >
           {mode === "register" && (
             <View>
-              <AppText className="text-[13px] font-medium text-foreground mb-1">Prénom</AppText>
+              <AppText className="text-[13px] font-medium text-foreground mb-1.5">Prénom</AppText>
               <TextInput
                 value={firstName}
                 onChangeText={setFirstName}
                 placeholder="Alex"
-                className="rounded-xl border px-4 py-3 text-[15px]"
+                className="rounded-xl border px-4 py-3.5 text-[15px]"
                 style={{ borderColor: colors.border, backgroundColor: colors.cream }}
                 placeholderTextColor={colors.mutedText}
               />
@@ -133,38 +161,51 @@ export default function LoginScreen() {
           )}
 
           <View>
-            <AppText className="text-[13px] font-medium text-foreground mb-1">Email</AppText>
+            <AppText className="text-[13px] font-medium text-foreground mb-1.5">Email</AppText>
             <TextInput
               value={email}
               onChangeText={setEmail}
               placeholder="alex@example.com"
               keyboardType="email-address"
               autoCapitalize="none"
-              className="rounded-xl border px-4 py-3 text-[15px]"
+              className="rounded-xl border px-4 py-3.5 text-[15px]"
               style={{ borderColor: colors.border, backgroundColor: colors.cream }}
               placeholderTextColor={colors.mutedText}
             />
           </View>
 
           <View>
-            <AppText className="text-[13px] font-medium text-foreground mb-1">
+            <AppText className="text-[13px] font-medium text-foreground mb-1.5">
               Mot de passe
             </AppText>
-            <TextInput
-              value={password}
-              onChangeText={setPassword}
-              placeholder="••••••••"
-              secureTextEntry
-              className="rounded-xl border px-4 py-3 text-[15px]"
-              style={{ borderColor: colors.border, backgroundColor: colors.cream }}
-              placeholderTextColor={colors.mutedText}
-            />
+            <View className="relative justify-center">
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="••••••••"
+                secureTextEntry={!showPassword}
+                className="rounded-xl border pl-4 pr-12 py-3.5 text-[15px] w-full"
+                style={{ borderColor: colors.border, backgroundColor: colors.cream }}
+                placeholderTextColor={colors.mutedText}
+              />
+              <Pressable
+                onPress={() => setShowPassword(!showPassword)}
+                className="absolute right-4 p-1 active:opacity-70"
+                hitSlop={8}
+              >
+                <Ionicons
+                  name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  size={20}
+                  color={colors.mutedText}
+                />
+              </Pressable>
+            </View>
           </View>
 
           <Pressable
             onPress={handleSubmit}
             disabled={loading}
-            className="rounded-xl py-4 items-center mt-2 active:opacity-80"
+            className="rounded-xl py-4 items-center mt-2 active:opacity-90"
             style={{ backgroundColor: colors.sage }}
           >
             {loading ? (
@@ -179,8 +220,11 @@ export default function LoginScreen() {
 
         {/* Toggle */}
         <Pressable
-          onPress={() => setMode(mode === "login" ? "register" : "login")}
-          className="items-center mt-5 py-2"
+          onPress={() => {
+            setMode(mode === "login" ? "register" : "login");
+            setShowPassword(false);
+          }}
+          className="items-center mt-6 py-2"
         >
           <AppText className="text-[14px] text-muted-foreground">
             {mode === "login" ? "Pas encore de compte ? " : "Déjà un compte ? "}

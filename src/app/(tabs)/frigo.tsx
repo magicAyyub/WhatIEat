@@ -27,6 +27,7 @@ import { useFridgeStore } from "@/store";
 import { useRouter } from "expo-router";
 import { useProfileStore } from "@/store/profile-store";
 import { useAuthStore } from "@/store/auth-store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { userService } from "@/services/userService";
 import type { Ingredient } from "@/types/ingredient";
 import { getSafeIconName } from "@/helpers/utils/icons";
@@ -247,7 +248,7 @@ function IngredientFormModal({ visible, onClose, onSave, initial }: {
                   </View>
                 </View>
 
-                {/* Date expiration — calendrier */}
+                {/* Date expiration : calendrier */}
                 <View>
                   <AppText className="text-[13px] font-medium text-foreground mb-1">
                     Expiry date <AppText className="font-normal text-muted-foreground">(optional)</AppText>
@@ -434,8 +435,9 @@ export default function FrigoScreen() {
   const setIngredients      = useFridgeStore((s) => s.setIngredients);
   const { profile }         = useProfileStore();
   const { isAuthenticated } = useAuthStore();
+  const insets              = useSafeAreaInsets();
 
-  // Sync initial supprimé — le frigo est chargé depuis la DB au login
+  // Sync initial supprimé : le frigo est chargé depuis la DB au login
   // via auth-store.loadFridgeFromDB()
   // Le sync se fait uniquement lors des ajouts/modifications/suppressions explicites
 
@@ -592,7 +594,7 @@ export default function FrigoScreen() {
   return (
     <View className="flex-1 bg-background">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
-        <View className="px-5 pt-14 pb-4">
+        <View className="px-5 pb-4" style={{ paddingTop: insets.top + 16 }}>
           <View className="flex-row justify-between items-start">
             <View className="flex-1 pr-3">
               <AppText className="text-[26px] font-bold text-foreground">My Fridge</AppText>
@@ -631,8 +633,9 @@ export default function FrigoScreen() {
               <View className="flex-row items-center gap-1.5 mb-3">
                 <Ionicons name="warning" size={16} color={colors.destructive} />
                 <AppText className="text-[14px] font-bold" style={{ color: colors.destructive }}>
-                  Expiring soon — prioritized in suggestions
+                  Expiring soon (prioritized in suggestions)
                 </AppText>
+
               </View>
               {expiringSoon.map((item) => (
                 <InventoryItemRow key={item.id} item={item} onDelete={() => handleDelete(item.id)} onEdit={() => handleOpenEdit(item)} />
